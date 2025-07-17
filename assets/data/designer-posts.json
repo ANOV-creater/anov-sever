@@ -1,0 +1,24 @@
+{
+  "posts": [
+    {
+      "id": "post_001",
+      "designerId": "dongwan",
+      "title": "오늘의 펌 스타일링",
+      "content": "고객님의 자연스러운 웨이브 펜을 완성했습니다. 부드러운 질감과 볼륨감이 포인트!",
+      "images": ["/assets/posts/dongwan/post_001_1.jpg"],
+      "createdAt": "2025-01-17T10:30:00Z",
+      "isPublished": true,
+      "tags": ["펌", "웨이브", "볼륨"]
+    },
+    {
+      "id": "post_002",
+      "designerId": "eunhyuk",
+      "title": "트렌디한 레이어 컷",
+      "content": "봄 시즌을 맞아 가벼운 레이어 컷으로 스타일링했습니다.",
+      "images": ["/assets/posts/eunhyuk/post_002_1.jpg"],
+      "createdAt": "2025-01-17T14:15:00Z",
+      "isPublished": true,
+      "tags": ["레이어컷", "봄스타일", "트렌드"]
+    }
+  ]
+}

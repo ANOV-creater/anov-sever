@@ -2,12 +2,53 @@ const express = require('express');
 const path = require('path');
 const webpush = require('web-push');
 const fs = require('fs');
+const multer = require('multer');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const session = require('express-session');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware for parsing JSON
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Session middleware
+app.use(session({
+    secret: 'anov-designer-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+}));
+
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, 'assets', 'posts', req.session.designerId || 'temp');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        const timestamp = Date.now();
+        const ext = path.extname(file.originalname);
+        cb(null, `${timestamp}${ext}`);
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed'));
+        }
+    }
+});
 
 // Configure web-push with VAPID keys
 webpush.setVapidDetails(
@@ -39,9 +80,235 @@ app.use('/assets', express.static(path.join(__dirname, 'assets'), {
     }
 }));
 
+// Authentication middleware
+function requireAuth(req, res, next) {
+    if (req.session && req.session.designerId) {
+        next();
+    } else {
+        res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+}
+
+// Helper functions
+function loadDesignerAccounts() {
+    try {
+        const data = fs.readFileSync(path.join(__dirname, 'assets', 'auth', 'designer-accounts.json'), 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Error loading designer accounts:', error);
+        return { accounts: [] };
+    }
+}
+
+function loadDesignerSchedules() {
+    try {
+        const data = fs.readFileSync(path.join(__dirname, 'assets', 'data', 'designer-schedules.json'), 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Error loading designer schedules:', error);
+        return { schedules: {} };
+    }
+}
+
+function saveDesignerSchedules(schedules) {
+    try {
+        fs.writeFileSync(
+            path.join(__dirname, 'assets', 'data', 'designer-schedules.json'),
+            JSON.stringify(schedules, null, 2)
+        );
+        return true;
+    } catch (error) {
+        console.error('Error saving designer schedules:', error);
+        return false;
+    }
+}
+
+function loadDesignerPosts() {
+    try {
+        const data = fs.readFileSync(path.join(__dirname, 'assets', 'data', 'designer-posts.json'), 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Error loading designer posts:', error);
+        return { posts: [] };
+    }
+}
+
+function saveDesignerPosts(posts) {
+    try {
+        fs.writeFileSync(
+            path.join(__dirname, 'assets', 'data', 'designer-posts.json'),
+            JSON.stringify(posts, null, 2)
+        );
+        return true;
+    } catch (error) {
+        console.error('Error saving designer posts:', error);
+        return false;
+    }
+}
+
 // Route for main page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Designer login page
+app.get('/designer-login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'designer-login.html'));
+});
+
+// Designer dashboard
+app.get('/designer-dashboard', requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'designer-dashboard.html'));
+});
+
+// Authentication APIs
+app.post('/api/designer/login', (req, res) => {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+        return res.status(400).json({ error: '이메일과 비밀번호를 입력해주세요.' });
+    }
+    
+    const accounts = loadDesignerAccounts();
+    const designer = accounts.accounts.find(acc => acc.email === email && acc.isActive);
+    
+    if (!designer) {
+        return res.status(401).json({ error: '존재하지 않는 계정입니다.' });
+    }
+    
+    // Simple password check (in production, use bcrypt)
+    if (designer.password !== password) {
+        return res.status(401).json({ error: '비밀번호가 올바르지 않습니다.' });
+    }
+    
+    // Set session
+    req.session.designerId = designer.id;
+    req.session.designerName = designer.name;
+    req.session.designerEmail = designer.email;
+    
+    res.json({ 
+        success: true, 
+        designer: {
+            id: designer.id,
+            name: designer.name,
+            email: designer.email,
+            floor: designer.floor,
+            role: designer.role
+        }
+    });
+});
+
+app.post('/api/designer/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: '로그아웃 중 오류가 발생했습니다.' });
+        }
+        res.json({ success: true });
+    });
+});
+
+// Get current designer info
+app.get('/api/designer/me', requireAuth, (req, res) => {
+    res.json({
+        id: req.session.designerId,
+        name: req.session.designerName,
+        email: req.session.designerEmail
+    });
+});
+
+// Schedule management APIs
+app.get('/api/designer/schedule', requireAuth, (req, res) => {
+    const schedules = loadDesignerSchedules();
+    const designerSchedule = schedules.schedules[req.session.designerId] || {
+        workingHours: {
+            monday: [], tuesday: [], wednesday: [], thursday: [],
+            friday: [], saturday: [], sunday: []
+        },
+        holidays: [],
+        lastUpdated: new Date().toISOString()
+    };
+    
+    res.json(designerSchedule);
+});
+
+app.post('/api/designer/schedule', requireAuth, (req, res) => {
+    const { workingHours, holidays } = req.body;
+    
+    if (!workingHours) {
+        return res.status(400).json({ error: '근무 시간 정보가 필요합니다.' });
+    }
+    
+    const schedules = loadDesignerSchedules();
+    
+    schedules.schedules[req.session.designerId] = {
+        workingHours,
+        holidays: holidays || [],
+        lastUpdated: new Date().toISOString()
+    };
+    
+    if (saveDesignerSchedules(schedules)) {
+        res.json({ success: true, message: '스케줄이 저장되었습니다.' });
+    } else {
+        res.status(500).json({ error: '스케줄 저장 중 오류가 발생했습니다.' });
+    }
+});
+
+// Post management APIs
+app.get('/api/designer/posts', requireAuth, (req, res) => {
+    const posts = loadDesignerPosts();
+    const designerPosts = posts.posts.filter(post => post.designerId === req.session.designerId);
+    
+    res.json(designerPosts);
+});
+
+app.post('/api/designer/posts', requireAuth, upload.array('images', 5), (req, res) => {
+    const { title, content, tags } = req.body;
+    
+    if (!title || !content) {
+        return res.status(400).json({ error: '제목과 내용을 입력해주세요.' });
+    }
+    
+    const posts = loadDesignerPosts();
+    
+    const newPost = {
+        id: `post_${Date.now()}`,
+        designerId: req.session.designerId,
+        title,
+        content,
+        images: req.files ? req.files.map(file => `/assets/posts/${req.session.designerId}/${file.filename}`) : [],
+        createdAt: new Date().toISOString(),
+        isPublished: true,
+        tags: tags ? tags.split(',').map(tag => tag.trim()) : []
+    };
+    
+    posts.posts.push(newPost);
+    
+    if (saveDesignerPosts(posts)) {
+        res.json({ success: true, post: newPost });
+    } else {
+        res.status(500).json({ error: '게시글 저장 중 오류가 발생했습니다.' });
+    }
+});
+
+app.delete('/api/designer/posts/:postId', requireAuth, (req, res) => {
+    const { postId } = req.params;
+    const posts = loadDesignerPosts();
+    
+    const postIndex = posts.posts.findIndex(post => 
+        post.id === postId && post.designerId === req.session.designerId
+    );
+    
+    if (postIndex === -1) {
+        return res.status(404).json({ error: '게시글을 찾을 수 없습니다.' });
+    }
+    
+    posts.posts.splice(postIndex, 1);
+    
+    if (saveDesignerPosts(posts)) {
+        res.json({ success: true, message: '게시글이 삭제되었습니다.' });
+    } else {
+        res.status(500).json({ error: '게시글 삭제 중 오류가 발생했습니다.' });
+    }
 });
 
 // API endpoints for future booking functionality

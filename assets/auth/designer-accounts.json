@@ -1,0 +1,44 @@
+{
+  "accounts": [
+    {
+      "id": "dongwan",
+      "email": "dongwan@junohair.com",
+      "password": "dongwan123!",
+      "name": "DONGWAN",
+      "floor": "3F",
+      "role": "MasterStylist",
+      "createdAt": "2025-01-01T00:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "eunhyuk",
+      "email": "eunhyuk@junohair.com",
+      "password": "eunhyuk123!",
+      "name": "EUN HYUK",
+      "floor": "3F",
+      "role": "MasterStylist",
+      "createdAt": "2025-01-01T00:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "green",
+      "email": "green@junohair.com",
+      "password": "green123!",
+      "name": "GREEN",
+      "floor": "4F",
+      "role": "MasterStylist",
+      "createdAt": "2025-01-01T00:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "woogi",
+      "email": "woogi@junohair.com",
+      "password": "woogi123!",
+      "name": "WOO-GI",
+      "floor": "3F",
+      "role": "Designer",
+      "createdAt": "2025-01-01T00:00:00Z",
+      "isActive": true
+    }
+  ]
+}

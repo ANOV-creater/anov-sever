@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUNO HAIR - 디자이너 대시보드</title>
+    <style>
+        /* Custom Font Loading */
+        @font-face {
+            font-family: 'SansSerifFLF';
+            src: url('/assets/font/SansSerifFLF.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SansSerifFLF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .header-left p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .user-email {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 16px;
+            padding: 8px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #f8f9fa;
+            color: #1d1d1f;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            color: #1d1d1f;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1d1d1f;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e5e7;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* Schedule Grid */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 120px repeat(7, 1fr);
+            gap: 1px;
+            background: #e5e5e7;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .schedule-header {
+            background: #667eea;
+            color: white;
+            padding: 16px 8px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .schedule-time {
+            background: #f8f9fa;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .schedule-cell {
+            background: white;
+            padding: 8px;
+            text-align: center;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .schedule-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Holiday Calendar */
+        .holiday-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .calendar-day {
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #e5e5e7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .calendar-day:hover {
+            border-color: #667eea;
+        }
+
+        .calendar-day.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .calendar-day.disabled {
+            background: #f8f9fa;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Posts Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .post-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e5e5e7;
+            transition: transform 0.2s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .post-content {
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .post-images {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .post-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #e5e5e7;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .post-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .post-tag {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        .file-upload:hover {
+            background: #f8f9ff;
+        }
+
+        .file-upload.dragover {
+            background: #f0f4ff;
+            border-color: #4c63d2;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .upload-text {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .schedule-grid {
+                font-size: 12px;
+            }
+
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>디자이너 대시보드</h1>
+                <p>JUNO HAIR 관리자 시스템</p>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="user-name" id="userName">로딩 중...</div>
+                    <div class="user-email" id="userEmail"></div>
+                </div>
+                <button class="logout-btn" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('posts')">📄 시술 콘텐츠</button>
+            <button class="nav-tab" onclick="showSection('schedule')">📆 예약 시간 관리</button>
+            <button class="nav-tab" onclick="showSection('holidays')">💤 휴무일 설정</button>
+        </div>
+
+        <!-- Posts Section -->
+        <div id="posts-section" class="content-section active">
+            <h2 class="section-title">시술 콘텐츠 관리</h2>
+            
+            <form id="postForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="postTitle">제목</label>
+                    <input type="text" id="postTitle" name="title" placeholder="시술 제목을 입력하세요" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="postContent">내용</label>
+                    <textarea id="postContent" name="content" placeholder="시술 내용을 상세히 설명해주세요" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="postTags">태그 (쉼표로 구분)</label>
+                    <input type="text" id="postTags" name="tags" placeholder="펌, 컷, 염색, 트리트먼트">
+                </div>
+
+                <div class="form-group">
+                    <label>이미지 업로드</label>
+                    <div class="file-upload" onclick="document.getElementById('postImages').click()">
+                        <input type="file" id="postImages" name="images" multiple accept="image/*">
+                        <div class="upload-text">📸 이미지를 선택하거나 드래그하세요</div>
+                        <div class="upload-hint">최대 5개 파일, 각 10MB 이하</div>
+                    </div>
+                    <div id="selectedFiles"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">게시글 등록</button>
+            </form>
+
+            <div class="posts-grid" id="postsGrid">
+                <!-- Posts will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Schedule Section -->
+        <div id="schedule-section" class="content-section">
+            <h2 class="section-title">예약 가능 시간 설정</h2>
+            <p style="margin-bottom: 24px; color: #666;">체크박스를 선택하여 예약 가능한 시간을 설정하세요.</p>
+
+            <div class="schedule-grid" id="scheduleGrid">
+                <!-- Schedule grid will be generated here -->
+            </div>
+
+            <button class="btn btn-primary" onclick="saveSchedule()">스케줄 저장</button>
+        </div>
+
+        <!-- Holidays Section -->
+        <div id="holidays-section" class="content-section">
+            <h2 class="section-title">휴무일 설정</h2>
+            <p style="margin-bottom: 24px; color: #666;">휴무일로 설정할 날짜를 선택하세요.</p>
+
+            <div class="form-group">
+                <label for="holidayDate">휴무일 추가</label>
+                <input type="date" id="holidayDate">
+                <button class="btn btn-secondary" onclick="addHoliday()" style="margin-left: 12px;">추가</button>
+            </div>
+
+            <div id="holidaysList">
+                <!-- Holidays will be loaded here -->
+            </div>
+
+            <button class="btn btn-primary" onclick="saveHolidays()">휴무일 저장</button>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        let currentDesigner = null;
+        let currentSchedule = null;
+        let currentHolidays = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadDesignerInfo();
+            await loadPosts();
+            await loadSchedule();
+            setupFileUpload();
+        });
+
+        // Load designer info
+        async function loadDesignerInfo() {
+            try {
+                const response = await fetch('/api/designer/me');
+                if (response.ok) {
+                    currentDesigner = await response.json();
+                    document.getElementById('userName').textContent = currentDesigner.name;
+                    document.getElementById('userEmail').textContent = currentDesigner.email;
+                } else {
+                    window.location.href = '/designer-login';
+                }
+            } catch (error) {
+                console.error('Error loading designer info:', error);
+                window.location.href = '/designer-login';
+            }
+        }
+
+        // Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Load section-specific data
+            if (sectionName === 'schedule') {
+                generateScheduleGrid();
+            } else if (sectionName === 'holidays') {
+                loadHolidays();
+            }
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                await fetch('/api/designer/logout', { method: 'POST' });
+                window.location.href = '/designer-login';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/designer-login';
+            }
+        }
+
+        // Posts Management
+        async function loadPosts() {
+            try {
+                const response = await fetch('/api/designer/posts');
+                if (response.ok) {
+                    const posts = await response.json();
+                    renderPosts(posts);
+                }
+            } catch (error) {
+                console.error('Error loading posts:', error);
+            }
+        }
+
+        function renderPosts(posts) {
+            const postsGrid = document.getElementById('postsGrid');
+            
+            if (posts.length === 0) {
+                postsGrid.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">등록된 게시글이 없습니다.</p>';
+                return;
+            }
+
+            postsGrid.innerHTML = posts.map(post => `
+                <div class="post-card">
+                    <div class="post-title">${post.title}</div>
+                    <div class="post-content">${post.content}</div>
+                    ${post.images.length > 0 ? `
+                        <div class="post-images">
+                            ${post.images.map(img => `<img src="${img}" class="post-image" alt="시술 이미지">`).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="post-meta">
+                        <span>${new Date(post.createdAt).toLocaleDateString('ko-KR')}</span>
+                        <div class="post-tags">
+                            ${post.tags.map(tag => `<span class="post-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="btn btn-danger btn-small" onclick="deletePost('${post.id}')">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Post form submission
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('/api/designer/posts', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('게시글이 등록되었습니다!', 'success');
+                    e.target.reset();
+                    document.getElementById('selectedFiles').innerHTML = '';
+                    await loadPosts();
+                } else {
+                    showNotification(result.error || '게시글 등록에 실패했습니다.', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating post:', error);
+                showNotification('서버 오류가 발생했습니다.', 'error');
+            }
+        });
+
+        // Delete post
+        async function deletePost(postId) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+            
+            try {
+                const response = await fetch(`/api/designer/posts/${postId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('게시글이 삭제되었습니다.', 'success');
+                    await loadPosts();
+                } else {
+                    showNotification(result.error || '삭제에 실패했습니다.', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting post:', error);
+                showNotification('서버 오류가 발생했습니다.', 'error');
+            }
+        }
+
+        // File upload setup
+        function setupFileUpload() {
+            const fileUpload = document.querySelector('.file-upload');
+            const fileInput = document.getElementById('postImages');
+            const selectedFiles = document.getElementById('selectedFiles');
+
+            fileInput.addEventListener('change', (e) => {
+                displaySelectedFiles(e.target.files);
+            });
+
+            fileUpload.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUpload.classList.add('dragover');
+            });
+
+            fileUpload.addEventListener('dragleave', () => {
+                fileUpload.classList.remove('dragover');
+            });
+
+            fileUpload.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUpload.classList.remove('dragover');
+                fileInput.files = e.dataTransfer.files;
+                displaySelectedFiles(e.dataTransfer.files);
+            });
+        }
+
+        function displaySelectedFiles(files) {
+            const selectedFiles = document.getElementById('selectedFiles');
+            selectedFiles.innerHTML = '';
+            
+            Array.from(files).forEach(file => {
+                const fileDiv = document.createElement('div');
+                fileDiv.style.cssText = 'margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 8px; font-size: 14px;';
+                fileDiv.textContent = `📎 ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`;
+                selectedFiles.appendChild(fileDiv);
+            });
+        }
+
+        // Schedule Management
+        async function loadSchedule() {
+            try {
+                const response = await fetch('/api/designer/schedule');
+                if (response.ok) {
+                    currentSchedule = await response.json();
+                    currentHolidays = currentSchedule.holidays || [];
+                }
+            } catch (error) {
+                console.error('Error loading schedule:', error);
+            }
+        }
+
+        function generateScheduleGrid() {
+            const scheduleGrid = document.getElementById('scheduleGrid');
+            const days = ['시간', '월', '화', '수', '목', '금', '토', '일'];
+            const hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+            const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+            let html = '';
+            
+            // Header
+            days.forEach(day => {
+                html += `<div class="schedule-header">${day}</div>`;
+            });
+
+            // Time slots
+            hours.forEach(hour => {
+                html += `<div class="schedule-time">${hour}</div>`;
+                
+                dayKeys.forEach(dayKey => {
+                    const isChecked = currentSchedule && currentSchedule.workingHours[dayKey] && 
+                                     currentSchedule.workingHours[dayKey].includes(hour);
+                    
+                    html += `
+                        <div class="schedule-cell">
+                            <input type="checkbox" class="schedule-checkbox" 
+                                   data-day="${dayKey}" data-hour="${hour}" 
+                                   ${isChecked ? 'checked' : ''}>
+                        </div>
+                    `;
+                });
+            });
+
+            scheduleGrid.innerHTML = html;
+        }
+
+        async function saveSchedule() {
+            const workingHours = {
+                monday: [], tuesday: [], wednesday: [], thursday: [],
+                friday: [], saturday: [], sunday: []
+            };
+
+            document.querySelectorAll('.schedule-checkbox:checked').forEach(checkbox => {
+                const day = checkbox.dataset.day;
+                const hour = checkbox.dataset.hour;
+                workingHours[day].push(hour);
+            });
+
+            try {
+                const response = await fetch('/api/designer/schedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ workingHours, holidays: currentHolidays })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('스케줄이 저장되었습니다!', 'success');
+                } else {
+                    showNotification(result.error || '저장에 실패했습니다.', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving schedule:', error);
+                showNotification('서버 오류가 발생했습니다.', 'error');
+            }
+        }
+
+        // Holiday Management
+        function loadHolidays() {
+            const holidaysList = document.getElementById('holidaysList');
+            
+            if (currentHolidays.length === 0) {
+                holidaysList.innerHTML = '<p style="color: #666;">설정된 휴무일이 없습니다.</p>';
+                return;
+            }
+
+            holidaysList.innerHTML = `
+                <div style="margin-bottom: 16px;">
+                    <strong>현재 휴무일:</strong>
+                </div>
+                ${currentHolidays.map(holiday => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px;">
+                        <span>${new Date(holiday).toLocaleDateString('ko-KR')}</span>
+                        <button class="btn btn-danger btn-small" onclick="removeHoliday('${holiday}')">삭제</button>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function addHoliday() {
+            const dateInput = document.getElementById('holidayDate');
+            const date = dateInput.value;
+            
+            if (!date) {
+                showNotification('날짜를 선택해주세요.', 'error');
+                return;
+            }
+
+            if (currentHolidays.includes(date)) {
+                showNotification('이미 추가된 휴무일입니다.', 'error');
+                return;
+            }
+
+            currentHolidays.push(date);
+            currentHolidays.sort();
+            dateInput.value = '';
+            loadHolidays();
+        }
+
+        function removeHoliday(date) {
+            currentHolidays = currentHolidays.filter(holiday => holiday !== date);
+            loadHolidays();
+        }
+
+        async function saveHolidays() {
+            try {
+                const workingHours = currentSchedule ? currentSchedule.workingHours : {
+                    monday: [], tuesday: [], wednesday: [], thursday: [],
+                    friday: [], saturday: [], sunday: []
+                };
+
+                const response = await fetch('/api/designer/schedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ workingHours, holidays: currentHolidays })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('휴무일이 저장되었습니다!', 'success');
+                } else {
+                    showNotification(result.error || '저장에 실패했습니다.', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving holidays:', error);
+                showNotification('서버 오류가 발생했습니다.', 'error');
+            }
+        }
+
+        // Notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
