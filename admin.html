@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUNO HAIR - 관리자 대시보드</title>
+    <style>
+        /* Custom Font Loading */
+        @font-face {
+            font-family: 'SansSerifFLF';
+            src: url('/assets/font/SansSerifFLF.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SansSerifFLF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f8f8;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            color: #86868b;
+            margin-bottom: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: #f8f8f8;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Filters */
+        .filters {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1d1d1f;
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 1px solid #d1d1d6;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #ffffff;
+            color: #1d1d1f;
+            min-width: 150px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .refresh-btn {
+            background: #1d1d1f;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .refresh-btn:hover {
+            background: #333;
+        }
+
+        /* Bookings List */
+        .bookings-section {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            color: #1d1d1f;
+        }
+
+        .booking-card {
+            border: 1px solid #e5e5e7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .booking-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .booking-card.new {
+            border-left: 4px solid #30d158;
+            background: linear-gradient(90deg, rgba(48, 209, 88, 0.05) 0%, transparent 100%);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .booking-id {
+            font-size: 12px;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .booking-designer {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .booking-datetime {
+            font-size: 16px;
+            color: #86868b;
+        }
+
+        .booking-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-confirmed {
+            background: #e8f5e8;
+            color: #30d158;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #ff9500;
+        }
+
+        .status-cancelled {
+            background: #fce4e6;
+            color: #ff3b30;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e5e7;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: #1d1d1f;
+            font-weight: 400;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e5e5e7;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1d1d1f;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #86868b;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 64px 32px;
+            color: #86868b;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .empty-subtitle {
+            font-size: 16px;
+            color: #86868b;
+        }
+
+        /* New Booking Notification */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: #30d158;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(48, 209, 88, 0.3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .header {
+                padding: 24px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .refresh-btn {
+                margin-left: 0;
+                margin-top: 16px;
+            }
+
+            .booking-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .booking-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Stats -->
+        <div class="header">
+            <h1 class="header-title">JUNO HAIR 관리자</h1>
+            <p class="header-subtitle">예약 현황 및 관리</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="todayBookings">0</div>
+                    <div class="stat-label">오늘 예약</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="weekBookings">0</div>
+                    <div class="stat-label">이번 주</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="monthBookings">0</div>
+                    <div class="stat-label">이번 달</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalBookings">0</div>
+                    <div class="stat-label">전체 예약</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">날짜</label>
+                    <select class="filter-select" id="dateFilter">
+                        <option value="all">전체</option>
+                        <option value="today">오늘</option>
+                        <option value="tomorrow">내일</option>
+                        <option value="week">이번 주</option>
+                        <option value="month">이번 달</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">디자이너</label>
+                    <select class="filter-select" id="designerFilter">
+                        <option value="all">전체 디자이너</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">상태</label>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="all">전체 상태</option>
+                        <option value="confirmed">확정</option>
+                        <option value="pending">대기</option>
+                        <option value="cancelled">취소</option>
+                    </select>
+                </div>
+                
+                <button class="refresh-btn" id="refreshBtn">새로고침</button>
+            </div>
+        </div>
+
+        <!-- Bookings List -->
+        <div class="bookings-section">
+            <h2 class="section-title">예약 목록</h2>
+            <div id="bookingsList">
+                <!-- Bookings will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- New Booking Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-title">새로운 예약!</div>
+        <div class="notification-message" id="notificationMessage"></div>
+    </div>
+
+    <script>
+        let allBookings = [];
+        let filteredBookings = [];
+        let lastBookingCount = 0;
+
+        // DOM Elements
+        const bookingsList = document.getElementById('bookingsList');
+        const dateFilter = document.getElementById('dateFilter');
+        const designerFilter = document.getElementById('designerFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const notification = document.getElementById('notification');
+
+        // Load bookings from localStorage
+        function loadBookings() {
+            allBookings = JSON.parse(localStorage.getItem('allBookings') || '[]');
+            
+            // Check for new bookings
+            if (allBookings.length > lastBookingCount) {
+                const newBookingsCount = allBookings.length - lastBookingCount;
+                showNotification(`${newBookingsCount}개의 새로운 예약이 있습니다!`);
+            }
+            lastBookingCount = allBookings.length;
+            
+            updateStats();
+            populateDesignerFilter();
+            applyFilters();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const today = new Date();
+            const todayStr = formatDateForComparison(today);
+            
+            // Calculate start of week and month
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+            let todayCount = 0;
+            let weekCount = 0;
+            let monthCount = 0;
+
+            allBookings.forEach(booking => {
+                const bookingDate = parseBookingDate(booking.date);
+                const bookingDateStr = formatDateForComparison(bookingDate);
+                
+                if (bookingDateStr === todayStr) {
+                    todayCount++;
+                }
+                
+                if (bookingDate >= startOfWeek) {
+                    weekCount++;
+                }
+                
+                if (bookingDate >= startOfMonth) {
+                    monthCount++;
+                }
+            });
+
+            document.getElementById('todayBookings').textContent = todayCount;
+            document.getElementById('weekBookings').textContent = weekCount;
+            document.getElementById('monthBookings').textContent = monthCount;
+            document.getElementById('totalBookings').textContent = allBookings.length;
+        }
+
+        // Parse booking date string to Date object
+        function parseBookingDate(dateString) {
+            const [day, month, year] = dateString.split('-');
+            return new Date(year, month - 1, day);
+        }
+
+        // Format date for comparison
+        function formatDateForComparison(date) {
+            return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+        }
+
+        // Populate designer filter
+        function populateDesignerFilter() {
+            const designers = [...new Set(allBookings.map(booking => booking.designer.name))];
+            const designerFilter = document.getElementById('designerFilter');
+            
+            // Clear existing options except "All"
+            while (designerFilter.children.length > 1) {
+                designerFilter.removeChild(designerFilter.lastChild);
+            }
+            
+            designers.forEach(designer => {
+                const option = document.createElement('option');
+                option.value = designer;
+                option.textContent = designer;
+                designerFilter.appendChild(option);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const dateFilterValue = dateFilter.value;
+            const designerFilterValue = designerFilter.value;
+            const statusFilterValue = statusFilter.value;
+            
+            filteredBookings = allBookings.filter(booking => {
+                // Date filter
+                if (dateFilterValue !== 'all') {
+                    const bookingDate = parseBookingDate(booking.date);
+                    const today = new Date();
+                    
+                    switch (dateFilterValue) {
+                        case 'today':
+                            if (formatDateForComparison(bookingDate) !== formatDateForComparison(today)) {
+                                return false;
+                            }
+                            break;
+                        case 'tomorrow':
+                            const tomorrow = new Date(today);
+                            tomorrow.setDate(today.getDate() + 1);
+                            if (formatDateForComparison(bookingDate) !== formatDateForComparison(tomorrow)) {
+                                return false;
+                            }
+                            break;
+                        case 'week':
+                            const startOfWeek = new Date(today);
+                            startOfWeek.setDate(today.getDate() - today.getDay());
+                            const endOfWeek = new Date(startOfWeek);
+                            endOfWeek.setDate(startOfWeek.getDate() + 6);
+                            if (bookingDate < startOfWeek || bookingDate > endOfWeek) {
+                                return false;
+                            }
+                            break;
+                        case 'month':
+                            if (bookingDate.getMonth() !== today.getMonth() || 
+                                bookingDate.getFullYear() !== today.getFullYear()) {
+                                return false;
+                            }
+                            break;
+                    }
+                }
+                
+                // Designer filter
+                if (designerFilterValue !== 'all' && booking.designer.name !== designerFilterValue) {
+                    return false;
+                }
+                
+                // Status filter
+                if (statusFilterValue !== 'all' && booking.status !== statusFilterValue) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            renderBookings();
+        }
+
+        // Render bookings
+        function renderBookings() {
+            if (filteredBookings.length === 0) {
+                bookingsList.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1M9 11V9a2 2 0 1 1 4 0v2M9 11h6"/>
+                        </svg>
+                        <div class="empty-title">예약이 없습니다</div>
+                        <div class="empty-subtitle">선택한 조건에 맞는 예약이 없습니다</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort bookings by date and time
+            filteredBookings.sort((a, b) => {
+                const aDate = parseBookingDate(a.date);
+                const bDate = parseBookingDate(b.date);
+                if (aDate.getTime() !== bDate.getTime()) {
+                    return aDate - bDate;
+                }
+                return a.time.localeCompare(b.time);
+            });
+
+            const bookingsHTML = filteredBookings.map(booking => {
+                const isNew = Date.now() - booking.timestamp < 24 * 60 * 60 * 1000; // New if less than 24 hours old
+                const formattedDate = formatDisplayDate(booking.date);
+                
+                return `
+                    <div class="booking-card ${isNew ? 'new' : ''}">
+                        <div class="booking-header">
+                            <div>
+                                <div class="booking-id">${booking.id}</div>
+                                <div class="booking-designer">${booking.designer.name}</div>
+                                <div class="booking-datetime">${formattedDate} ${booking.time}</div>
+                            </div>
+                            <div class="booking-status status-${booking.status}">
+                                ${getStatusText(booking.status)}
+                            </div>
+                        </div>
+                        
+                        <div class="booking-details">
+                            <div class="detail-item">
+                                <div class="detail-label">고객 정보</div>
+                                <div class="user-info">
+                                    <img class="user-avatar" src="${booking.user?.picture || ''}" 
+                                         alt="${booking.user?.name || '고객'}"
+                                         onerror="this.style.display='none'">
+                                    <div class="user-details">
+                                        <div class="user-name">${booking.user?.name || '알 수 없음'}</div>
+                                        <div class="user-email">${booking.user?.email || ''}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">예약 시간</div>
+                                <div class="detail-value">${new Date(booking.timestamp).toLocaleString('ko-KR')}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">디자이너</div>
+                                <div class="detail-value">${booking.designer.name}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            bookingsList.innerHTML = bookingsHTML;
+        }
+
+        // Format date for display
+        function formatDisplayDate(dateString) {
+            const [day, month, year] = dateString.split('-');
+            const date = new Date(year, month - 1, day);
+            const options = { 
+                month: 'short', 
+                day: 'numeric',
+                weekday: 'short'
+            };
+            return date.toLocaleDateString('ko-KR', options);
+        }
+
+        // Get status text in Korean
+        function getStatusText(status) {
+            const statusMap = {
+                'confirmed': '확정',
+                'pending': '대기',
+                'cancelled': '취소'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notificationMessage = document.getElementById('notificationMessage');
+            notificationMessage.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Event listeners
+        dateFilter.addEventListener('change', applyFilters);
+        designerFilter.addEventListener('change', applyFilters);
+        statusFilter.addEventListener('change', applyFilters);
+        refreshBtn.addEventListener('click', loadBookings);
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadBookings, 30000);
+
+        // Initial load
+        loadBookings();
+    </script>
+</body>
+</html>

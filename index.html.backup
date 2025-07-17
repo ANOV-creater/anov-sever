@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUNO HAIR - Booking</title>
+    <style>
+        /* Custom Font Loading */
+        @font-face {
+            font-family: 'SansSerifFLF';
+            src: url('/assets/font/SansSerifFLF.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'SansSerifFLF';
+            src: url('/assets/font/SansSerifFLF-Demibold.otf') format('opentype');
+            font-weight: 600;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'SansSerifFLF';
+            src: url('/assets/font/SansSerifBldFLF.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'SansSerifFLF';
+            src: url('/assets/font/SansSerifExbFLF.otf') format('opentype');
+            font-weight: 900;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SansSerifFLF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            overflow-x: hidden;
+            height: 200vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Intro Screen */
+        .intro-screen {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .logo {
+            width: auto;
+            height: 60px;
+            max-width: 280px;
+            object-fit: contain;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(0);
+        }
+
+        .logo.moved {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 40px;
+            z-index: 1000;
+        }
+
+        .from-anov {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 0.9rem;
+            color: #8e8e93;
+            font-weight: 400;
+            line-height: 1.2;
+            transition: opacity 0.4s ease;
+        }
+
+        .from-anov strong {
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .from-anov.intro {
+            opacity: 1;
+        }
+
+        .from-anov.hidden {
+            opacity: 0;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.7;
+            transition: opacity 0.4s ease;
+        }
+
+        .scroll-indicator.hidden {
+            opacity: 0;
+        }
+
+        .scroll-text {
+            font-size: 0.8rem;
+            color: #a1a1a6;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .scroll-arrow {
+            width: 14px;
+            height: 14px;
+            border-right: 1px solid #a1a1a6;
+            border-bottom: 1px solid #a1a1a6;
+            transform: rotate(45deg);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: rotate(45deg) translateY(0); }
+            50% { transform: rotate(45deg) translateY(8px); }
+        }
+
+        /* Selection Screen */
+        .selection-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 32px;
+            background: #ffffff;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 50;
+        }
+
+        .selection-screen.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 44px;
+        }
+
+        .wave-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 24px auto;
+            display: block;
+            animation: wave 2.5s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-8deg); }
+        }
+
+        .welcome-text {
+            font-size: 1.4rem;
+            color: #1d1d1f;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 340px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 18px 28px;
+            border: 1px solid #d1d1d6;
+            border-radius: 25px;
+            background: #ffffff;
+            color: #1d1d1f;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            letter-spacing: -0.01em;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:hover {
+            background: #f8f8f8;
+            border-color: #1d1d1f;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(29, 29, 31, 0.08);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            background: #f0f0f0;
+            box-shadow: 0 2px 8px rgba(29, 29, 31, 0.06);
+        }
+
+        /* Terms Section */
+        .terms-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .terms {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8e8e93;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            max-width: 300px;
+            font-weight: 400;
+        }
+
+        .terms a {
+            color: #1d1d1f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+        
+        .shield-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
+        /* Selection Screen ANOV */
+        .selection-screen .from-anov {
+            position: absolute;
+            bottom: 60px;
+            opacity: 1;
+        }
+
+        /* Step1 Screen Styles */
+        .step1-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            z-index: 310;
+            transform: translateX(100%);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .step1-screen.active {
+            transform: translateX(0);
+        }
+        
+        /* Hide selection screen when Step1 is active */
+        .step1-screen.active ~ .selection-screen {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .step1-header {
+            display: flex;
+            align-items: center;
+            padding: 60px 24px 24px 24px;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            margin-right: 16px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            background-color: #f5f5f7;
+        }
+        
+        .step1-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin: 0;
+            flex: 1;
+        }
+        
+        .designers-content {
+            flex: 1;
+            padding: 0 24px 20px 24px;
+        }
+        
+        .designer-group {
+            margin-bottom: 40px;
+        }
+        
+        .group-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0 0 20px 0;
+            text-align: left;
+        }
+        
+        .designers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .designer-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e7;
+            border-radius: 12px;
+            padding: 20px 16px 16px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .designer-card:hover {
+            border-color: #1d1d1f;
+            box-shadow: 0 2px 8px rgba(29, 29, 31, 0.08);
+        }
+        
+        .designer-card.selected {
+            border-color: #1d1d1f;
+            background: #f8f8f8;
+            box-shadow: 0 2px 12px rgba(29, 29, 31, 0.12);
+        }
+        
+        .designer-avatar {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px auto;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background: #e5e5e7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #8e8e93;
+        }
+        
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            border-radius: 50%;
+        }
+        
+        .designer-info {
+            text-align: center;
+        }
+        
+        .designer-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+        
+        .designer-instagram {
+            font-size: 0.75rem;
+            color: #8e8e93;
+            font-weight: 400;
+        }
+        
+        .continue-bar {
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: #ffffff;
+            padding: 20px 24px 34px 24px;
+            border-top: 1px solid #e5e5e7;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-sizing: border-box;
+            margin-top: auto;
+        }
+        
+        .step1-screen.active .continue-bar {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .continue-btn {
+            width: 100%;
+            padding: 16px;
+            background: #d1d1d6;
+            color: #8e8e93;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: not-allowed;
+            transition: all 0.3s ease;
+        }
+        
+        .continue-btn:enabled {
+            background: #1d1d1f;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        
+        .continue-btn:enabled:hover {
+            background: #000000;
+            transform: translateY(-1px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .logo {
+                height: 50px;
+                max-width: 240px;
+            }
+            
+            .logo.moved {
+                height: 32px;
+                top: 70px;
+            }
+            
+            .wave-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .welcome-text {
+                font-size: 1.25rem;
+            }
+            
+            .btn {
+                padding: 16px 24px;
+                font-size: 0.95rem;
+            }
+            
+            .terms {
+                font-size: 0.7rem;
+                max-width: 280px;
+            }
+            
+            .selection-screen {
+                padding: 0 24px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .logo {
+                height: 45px;
+                max-width: 220px;
+            }
+            
+            .logo.moved {
+                height: 28px;
+                top: 60px;
+            }
+            
+            .wave-icon {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .welcome-text {
+                font-size: 1.1rem;
+            }
+            
+            .button-container {
+                max-width: 300px;
+            }
+        }
+        
+        /* Step1.5 Modal Styles */
+        .step1-5-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 85vh; /* 화면 높이의 85% */
+            background: #ffffff;
+            z-index: 2000;
+            transform: translateY(100%);
+            transition: transform 0.4s ease-out;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+            display: block;
+            visibility: hidden;
+        }
+        
+        .step1-5-modal.active {
+            transform: translateY(0);
+            visibility: visible;
+        }
+        
+        .step1-5-modal.active ~ .modal-bottom-bar {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        
+        /* Step1.5 모달이 열릴 때 배경 오버레이 */
+        .step1-5-modal::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+        }
+        
+        .step1-5-modal.active::before {
+            opacity: 1;
+        }
+        
+        /* 드래그 핸들 */
+        .drag-handle {
+            width: 36px;
+            height: 4px;
+            background: #d0d0d0;
+            border-radius: 2px;
+            margin: 12px auto;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        /* 디자이너 소셜 정보 */
+        .designer-social {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: #f8f9fa;
+            margin: 20px 0;
+            border-radius: 12px;
+        }
+        
+        .designer-social .designer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ddd;
+            margin-right: 15px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .designer-social .designer-info {
+            flex: 1;
+        }
+        
+        .designer-social .designer-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 4px;
+        }
+        
+        .designer-social .designer-instagram {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .designer-social .designer-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .designer-social .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .designer-social .stat-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        .designer-social .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* 예약 버튼 스타일 */
+        .reservation-btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .reservation-btn:hover {
+            background: #0056b3;
+        }
+        
+        .modal-back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-back-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .modal-content {
+            padding: 12px 20px 120px 20px;
+        }
+        
+        .designer-profile {
+            max-width: 100%;
+            margin: 0 auto;
+            height: 200px;
+            background-size: cover;
+            background-position: top center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 메인 프로필 이미지 */
+        .main-profile-image {
+            width: 100%;
+            aspect-ratio: 0.75;
+            margin-bottom: 18px;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        
+        .profile-img-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .profile-img-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            background: #d0d0d0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* 통계 및 아바타 섹션 */
+        .stats-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 0 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #8e8e93;
+            font-weight: 400;
+            line-height: 1;
+        }
+        
+        .center-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid white;
+            margin: 0 auto;
+            position: relative;
+            top: -45px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #d0d0d0 0%, #c0c0c0 100%);
+        }
+        
+        /* 프로필 정보 */
+        .profile-info {
+            text-align: center;
+        }
+        
+        .profile-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            line-height: 1.2;
+        }
+        
+        .verified-badge {
+            color: #007AFF;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .profile-handle {
+            font-size: 13px;
+            color: #8e8e93;
+            font-weight: 400;
+            line-height: 1;
+        }
+        
+        /* 액션 버튼 */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .follow-btn, .reservation-btn {
+            padding: 8px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            height: 32px;
+            min-width: 120px;
+        }
+        
+        .follow-btn {
+            background: #007AFF;
+            color: #ffffff;
+        }
+        
+        .follow-btn:hover {
+            background: #0056CC;
+        }
+        
+        .reservation-btn {
+            background: #007AFF;
+            color: #ffffff;
+        }
+        
+        .reservation-btn:hover {
+            background: #0056CC;
+        }
+        
+        /* 포트폴리오 그리드 */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .portfolio-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .portfolio-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+            position: relative;
+        }
+        
+        .right-item:nth-child(3n) .portfolio-placeholder {
+            background: linear-gradient(135deg, #E6E6FA 0%, #DDA0DD 50%, #DA70D6 100%);
+        }
+        
+        .recommendation-overlay {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 4px;
+            padding: 4px 6px;
+            text-align: center;
+        }
+        
+        .rec-text {
+            color: white;
+            font-size: 9px;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        
+        /* 하단 Continue 버튼 바 */
+        .modal-bottom-bar {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            background: #ffffff;
+            padding: 20px 24px 34px 24px;
+            border-top: 1px solid #e5e5e7;
+            z-index: 2001 !important;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+
+        
+        .modal-continue-btn {
+            width: 100%;
+            padding: 16px;
+            background: #1d1d1f;
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-continue-btn:hover {
+            background: #000000;
+            transform: translateY(-1px);
+        }
+        
+        /* Step2 Screen Styles */
+        .step2-screen {
+            position: fixed;
+            top: 0;
+            left: 100vw;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .step2-screen.active {
+            transform: translateX(-100vw);
+        }
+        
+        .step2-header {
+            display: flex;
+            align-items: center;
+            padding: 60px 24px 24px 24px;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .step2-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin: 0;
+            flex: 1;
+        }
+        
+        /* 선택된 디자이너 정보 */
+        .selected-designer-info {
+            padding: 20px;
+            background: #ffffff;
+            margin-bottom: 20px;
+        }
+        
+        .designer-stats {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .stat-left, .stat-right {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 2px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #8e8e93;
+        }
+        
+        .designer-avatar-center {
+            flex: 0 0 auto;
+            margin: 0 20px;
+        }
+        
+        .designer-avatar-img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .designer-profile-info {
+            text-align: center;
+        }
+        
+        .designer-label {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-bottom: 4px;
+        }
+        
+        .designer-name-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        
+        .designer-name-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        
+        .verified-badge {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .designer-handle {
+            font-size: 14px;
+            color: #8e8e93;
+        }
+        
+        /* 날짜 선택 */
+        .date-selector {
+            padding: 0 20px;
+            margin-bottom: 32px;
+        }
+        
+        .date-options {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 0;
+        }
+        
+        .date-option {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1px solid #d1d1d6;
+            border-radius: 12px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 60px;
+        }
+        
+        .date-option.selected {
+            background: #007AFF;
+            border-color: #007AFF;
+        }
+        
+        .date-option.selected .day-name,
+        .date-option.selected .date-number {
+            color: #ffffff;
+        }
+        
+        .day-name {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .date-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        
+        /* 시간 선택 */
+        .time-selector {
+            flex: 1;
+            padding: 0 20px;
+            margin-bottom: 100px;
+        }
+        
+        .time-slots {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        
+        .time-slot {
+            padding: 16px 20px;
+            border: 1px solid #d1d1d6;
+            border-radius: 12px;
+            background: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1d1d1f;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .time-slot:hover {
+            background: #f8f8f8;
+        }
+        
+        .time-slot.selected {
+            background: #007AFF;
+            border-color: #007AFF;
+            color: #ffffff;
+        }
+        
+        .time-slot.unavailable {
+            background: #f8f8f8;
+            color: #c7c7cc;
+            cursor: not-allowed;
+        }
+        
+        .portfolio-image {
+            border-radius: 8px;
+            aspect-ratio: 1;
+            object-fit: cover;
+            object-position: center;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Screen -->
+    <div class="intro-screen" id="introScreen">
+        <img src="/assets/logos/JUNO new logo.png" alt="JUNO HAIR" class="logo" id="logo">
+        
+        <div class="scroll-indicator" id="scrollIndicator">
+            <div class="scroll-text">Scroll to continue</div>
+            <div class="scroll-arrow"></div>
+        </div>
+        
+        <div class="from-anov intro" id="fromAnovIntro">
+            from<br><strong>ANOV</strong>
+        </div>
+    </div>
+
+    <!-- Selection Screen -->
+    <div class="selection-screen" id="selectionScreen">
+        <div class="welcome-section">
+            <img src="/assets/logos/hand-waving.svg" alt="👋" class="wave-icon">
+            <div class="welcome-text">"Have you visited us before?"</div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn" id="newUserBtn">I'm new here</button>
+            <button class="btn" id="returningUserBtn">I've been here before</button>
+        </div>
+        
+        <div class="terms-section">
+            <div class="terms">
+                By continuing, you agree to our<br><a href="#" id="termsLink">[Terms of Use]</a> and <a href="#" id="privacyLink">[Privacy Policy]</a>.
+            </div>
+            <img src="/assets/logos/shield.svg" alt="Security" class="shield-icon">
+        </div>
+        
+        <div class="from-anov">
+            from<br><strong>ANOV</strong>
+        </div>
+    </div>
+
+    <!-- Step1 Screen (Designer Selection) -->
+    <div class="step1-screen" id="step1Screen">
+        <div class="step1-header">
+            <button class="back-btn" id="backBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <h1 class="step1-title">Select the designer</h1>
+        </div>
+        
+        <div class="designers-content">
+            <!-- 디자이너 목록은 JavaScript로 동적 생성 -->
+            <div id="designersContainer">
+                <!-- 4층 디자이너 그룹 -->
+                <div class="designer-group" id="floor4Designers">
+                    <h2 class="group-title">4Floor NO.1 designer</h2>
+                    <div class="designers-grid">
+                        <!-- JavaScript로 동적 생성 -->
+                    </div>
+                </div>
+                
+                <!-- 3층 디자이너 그룹 -->
+                <div class="designer-group" id="floor3Designers">
+                    <h2 class="group-title">3Floor designer</h2>
+                    <div class="designers-grid">
+                        <!-- JavaScript로 동적 생성 -->
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="continue-bar">
+            <button class="continue-btn" id="continueBtn" disabled>
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- Step1.5 Modal -->
+    <div class="step1-5-modal" id="step1-5Modal">
+        <!-- 드래그 핸들 -->
+        <div class="drag-handle"></div>
+        
+        <div class="modal-content">
+            <div class="designer-profile">
+                <!-- 뒤로가기 버튼 -->
+                <button class="modal-back-btn" id="modalBackBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18L9 12L15 6" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                
+                <!-- 메인 프로필 이미지 -->
+                <div class="main-profile-image">
+                    <div class="profile-img-placeholder"></div>
+                </div>
+                
+                <!-- 통계 및 아바타 섹션 -->
+                <div class="stats-section">
+                    <div class="stat-item">
+                        <div class="stat-number">23.1M</div>
+                        <div class="stat-label">followers</div>
+                    </div>
+                    <div class="center-avatar">
+                        <div class="avatar-placeholder"></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1.1M</div>
+                        <div class="stat-label">following</div>
+                    </div>
+                </div>
+                
+                <!-- 프로필 정보 -->
+                <div class="profile-info">
+                    <div class="profile-name">
+                        KANGMOO <span class="verified-badge">✓</span>
+                    </div>
+                    <div class="profile-handle">@Juno_Kangmoo</div>
+                </div>
+                
+                <!-- 액션 버튼 -->
+                <div class="action-buttons">
+                    <button class="follow-btn">Follow</button>
+                    <button class="reservation-btn">예약하기</button>
+                </div>
+            </div>
+            
+            <!-- 디자이너 소셜 정보 -->
+            <div class="designer-social">
+                <div class="designer-avatar"></div>
+                <div class="designer-info">
+                    <div class="designer-name">KANGMOO</div>
+                    <div class="designer-instagram">@Juno_Kangmoo</div>
+                </div>
+                <div class="designer-stats">
+                    <div class="stat-item">
+                        <span class="stat-number followers-count">23.1M</span>
+                        <span class="stat-label">followers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number following-count">1.1M</span>
+                        <span class="stat-label">following</span>
+                    </div>
+                </div>
+                
+                <!-- 포트폴리오 그리드 -->
+                <div class="portfolio-grid">
+                    <div class="portfolio-item">
+                        <div class="portfolio-placeholder"></div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="portfolio-placeholder"></div>
+                    </div>
+                    <div class="portfolio-item right-item">
+                        <div class="portfolio-placeholder">
+                            <div class="recommendation-overlay">
+                                <div class="rec-text">Korean hair salon</div>
+                                <div class="rec-text">recommendation</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="portfolio-placeholder"></div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="portfolio-placeholder"></div>
+                    </div>
+                    <div class="portfolio-item right-item">
+                        <div class="portfolio-placeholder">
+                            <div class="recommendation-overlay">
+                                <div class="rec-text">Korean hair salon</div>
+                                <div class="rec-text">recommendation</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="portfolio-placeholder"></div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="portfolio-placeholder"></div>
+                    </div>
+                    <div class="portfolio-item right-item">
+                        <div class="portfolio-placeholder">
+                            <div class="recommendation-overlay">
+                                <div class="rec-text">Korean hair salon</div>
+                                <div class="rec-text">recommendation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Step1.5 모달에서 사용할 디자이너 상세 정보 불러오기 -->
+    <script>
+        function loadDesignerDetails(designerId) {
+            fetch('/assets/designers/designers.json')
+                .then(response => response.json())
+                .then(data => {
+                    // 3층, 4층 모든 디자이너 합치기
+                    const allDesigners = [...data['3F'], ...data['4F']];
+                    
+                    // 선택된 디자이너 찾기
+                    const designer = allDesigners.find(d => d.id === designerId);
+                    
+                    if (designer) {
+                        // 이미지
+                        const profileImage = document.querySelector('.modal-content .designer-profile');
+                        profileImage.style.backgroundImage = `url(${designer.profileImage})`;
+                        
+                        // 아바타 이미지 엘리먼트 생성
+                const avatarImg = document.createElement('img');
+                avatarImg.src = designer.avatarImage;
+                avatarImg.alt = `${designer.name} avatar`;
+                avatarImg.style.width = '100%';
+                avatarImg.style.height = '100%';
+                avatarImg.style.borderRadius = '50%';
+                avatarImg.style.objectFit = 'cover';
+                avatarImg.style.objectPosition = 'top center';
+                        
+                        // 아바타 이미지 엘리먼트 추가
+                        const avatarContainer = document.querySelector('.center-avatar');
+                        avatarContainer.innerHTML = '';
+                        avatarContainer.appendChild(avatarImg);
+                        
+                        // 이름
+                        const designerName = document.querySelector('.designer-social .designer-name');
+                        designerName.textContent = designer.name;
+                        
+                        // 인스타그램
+                        const designerInstagram = document.querySelector('.designer-social .designer-instagram');
+                        designerInstagram.textContent = designer.handle;
+                        
+                        // 디자이너 소셜 섹션의 아바타 업데이트
+                        const socialAvatar = document.querySelector('.designer-social .designer-avatar');
+                        socialAvatar.style.backgroundImage = `url(${designer.avatarImage})`;
+                        
+                        // 팔로워, 팔로잉 수
+                        const followersEl = document.querySelector('.designer-social .followers-count');
+                        const followingEl = document.querySelector('.designer-social .following-count');
+                        followersEl.textContent = designer.stats.followers;
+                        followingEl.textContent = designer.stats.following;
+                        
+                        // 포트폴리오 이미지
+                        const portfolioGrid = document.querySelector('.portfolio-grid');
+                        portfolioGrid.innerHTML = '';
+                        
+                        // 포트폴리오 이미지 추가
+                        designer.portfolio.slice(0, 6).forEach(imgSrc => {
+                            const imgContainer = document.createElement('div');
+                            imgContainer.className = 'portfolio-item';
+                            
+                            const img = document.createElement('img');
+                            img.src = imgSrc;
+                            img.className = 'portfolio-image';
+                            img.alt = 'Portfolio work';
+                            img.loading = 'lazy'; // 이미지 지연 로딩 추가
+                            
+                            imgContainer.appendChild(img);
+                            portfolioGrid.appendChild(imgContainer);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('디자이너 상세 정보를 불러오는 중 오류가 발생했습니다:', error);
+                });
+        }
+    </script>
+    
+    <!-- Step1.5 모달 하단 Continue 버튼 -->
+    <div class="modal-bottom-bar" id="modalBottomBar">
+        <button class="modal-continue-btn" id="modalContinueBtn">
+            Continue
+        </button>
+    </div>
+
+    <!-- Step2 Screen (날짜/시간 선택) -->
+    <div class="step2-screen" id="step2Screen">
+        <div class="step2-header">
+            <button class="back-btn" id="step2BackBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <h1 class="step2-title">Choose your time</h1>
+        </div>
+        
+        <!-- 디자이너 정보 박스 -->
+        <div class="selected-designer-info">
+            <div class="designer-stats">
+                <div class="stat-left">
+                    <div class="stat-number">23.1M</div>
+                    <div class="stat-label">followers</div>
+                </div>
+                <div class="designer-avatar-center">
+                    <div class="designer-avatar-img"></div>
+                </div>
+                <div class="stat-right">
+                    <div class="stat-number">1.1M</div>
+                    <div class="stat-label">following</div>
+                </div>
+            </div>
+            
+            <div class="designer-profile-info">
+                <div class="designer-label">Your designer</div>
+                <div class="designer-name-section">
+                    <span class="designer-name-text">KANGMOO</span>
+                    <svg class="verified-badge" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 0L9.854 2.146L12.847 1.153L13.847 4.153L16.847 5.153L15.854 8.146L16.847 11.847L13.847 12.847L12.847 15.847L9.854 14.854L8 16L6.146 14.854L3.153 15.847L2.153 12.847L-0.847 11.847L0.146 8.146L-0.847 5.153L2.153 4.153L3.153 1.153L6.146 2.146L8 0Z" fill="#007AFF"/>
+                        <path d="M5 8L7 10L11 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="designer-handle">@Juno_Kangmoo</div>
+            </div>
+        </div>
+        
+        <!-- 날짜 선택 섹션 -->
+        <div class="date-selector">
+            <div class="date-options">
+                <div class="date-option" data-date="10">
+                    <div class="day-name">Thu</div>
+                    <div class="date-number">10</div>
+                </div>
+                <div class="date-option" data-date="11">
+                    <div class="day-name">Fri</div>
+                    <div class="date-number">11</div>
+                </div>
+                <div class="date-option selected" data-date="12">
+                    <div class="day-name">Sat</div>
+                    <div class="date-number">12</div>
+                </div>
+                <div class="date-option" data-date="13">
+                    <div class="day-name">Sun</div>
+                    <div class="date-number">13</div>
+                </div>
+                <div class="date-option" data-date="14">
+                    <div class="day-name">Mon</div>
+                    <div class="date-number">14</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 시간 선택 섹션 -->
+        <div class="time-selector">
+            <div class="time-slots">
+                <div class="time-slot" data-time="09:00">09:00</div>
+                <div class="time-slot" data-time="09:30">09:30</div>
+                <div class="time-slot" data-time="10:00">10:00</div>
+                <div class="time-slot" data-time="10:30">10:30</div>
+                <div class="time-slot" data-time="11:00">11:00</div>
+                <div class="time-slot" data-time="11:30">11:30</div>
+                <div class="time-slot" data-time="12:00">12:00</div>
+                <div class="time-slot" data-time="12:30">12:30</div>
+                <div class="time-slot" data-time="13:00">13:00</div>
+                <div class="time-slot" data-time="13:30">13:30</div>
+                <div class="time-slot" data-time="14:00">14:00</div>
+                <div class="time-slot" data-time="14:30">14:30</div>
+                <div class="time-slot" data-time="15:00">15:00</div>
+                <div class="time-slot" data-time="15:30">15:30</div>
+                <div class="time-slot" data-time="16:00">16:00</div>
+                <div class="time-slot" data-time="16:30">16:30</div>
+                <div class="time-slot" data-time="17:00">17:00</div>
+                <div class="time-slot" data-time="17:30">17:30</div>
+            </div>
+        </div>
+        
+        <!-- 하단 Continue 버튼 -->
+        <div class="continue-bar">
+            <button class="continue-btn" id="step2ContinueBtn" disabled>
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 플로우 리셋 - 모든 이벤트 핸들러와 상태를 다시 작성
+        let isTransitioned = false;
+        let scrollThreshold = 80;
+        
+        // 모든 이벤트 리스너 새로 정의하기 위한 변수
+        const APP_STATE = {
+            currentStep: 'intro', // intro, selection, step1, step1.5, step2
+            selectedDesigner: null,
+            selectedDate: null,
+            selectedTime: null
+        };
+        
+        // UI Elements
+        const logo = document.getElementById('logo');
+        const introScreen = document.getElementById('introScreen');
+        const selectionScreen = document.getElementById('selectionScreen');
+        const fromAnovIntro = document.getElementById('fromAnovIntro');
+        const scrollIndicator = document.getElementById('scrollIndicator');
+        const newUserBtn = document.getElementById('newUserBtn');
+        const returningUserBtn = document.getElementById('returningUserBtn');
+
+        // Handle scroll transition
+        function handleScroll() {
+            const currentScrollY = window.scrollY;
+            
+            if (!isTransitioned && currentScrollY > scrollThreshold) {
+                triggerTransition();
+            }
+        }
+
+        // Trigger smooth transition
+        function triggerTransition() {
+            if (isTransitioned) return;
+            isTransitioned = true;
+            
+            // Move logo to top
+            logo.classList.add('moved');
+            
+            // Hide intro elements
+            fromAnovIntro.classList.add('hidden');
+            scrollIndicator.classList.add('hidden');
+            
+            // Show selection screen with delay
+            setTimeout(() => {
+                selectionScreen.classList.add('active');
+            }, 250);
+        }
+
+        // Touch handling for mobile swipe
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        
+        function handleTouchStart(e) {
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+        }
+        
+        function handleTouchMove(e) {
+            if (isTransitioned) return;
+            
+            const currentY = e.touches[0].clientY;
+            const deltaY = touchStartY - currentY;
+            const deltaTime = Date.now() - touchStartTime;
+            
+            // Upward swipe with sufficient distance and speed
+            if (deltaY > 40 && deltaTime < 400) {
+                e.preventDefault();
+                triggerTransition();
+            }
+        }
+
+        // Step1 Screen Elements
+        const step1Screen = document.getElementById('step1Screen');
+        const backBtn = document.getElementById('backBtn');
+        const continueBtn = document.getElementById('continueBtn');
+        let selectedDesigner = null;
+        
+        console.log('코드 중복과 버그 수정후 초기화');
+
+        // Button selection handlers
+        function handleUserSelection(isNewUser) {
+            const selectedBtn = isNewUser ? newUserBtn : returningUserBtn;
+            
+            // Visual feedback with subtle highlighting
+            selectedBtn.style.background = '#f0f0f0';
+            selectedBtn.style.borderColor = '#1d1d1f';
+            selectedBtn.style.transform = 'scale(0.98)';
+            
+            setTimeout(() => {
+                if (isNewUser) {
+                    // Show Step1 screen for new users
+                    showStep1Screen();
+                } else {
+                    // Handle returning user flow
+                    console.log('Welcome back! Loading your information...');
+                }
+                
+                // Reset button style
+                selectedBtn.style.background = '#ffffff';
+                selectedBtn.style.borderColor = '#d1d1d6';
+                selectedBtn.style.transform = 'scale(1)';
+            }, 150);
+        }
+        
+        // JSON에서 디자이너 데이터 로드 함수
+        function loadDesigners() {
+            fetch('/assets/designers/designers.json')
+                .then(response => response.json())
+                .then(data => {
+                    // 4층 디자이너 로드
+                    const floor4Grid = document.querySelector('#floor4Designers .designers-grid');
+                    floor4Grid.innerHTML = ''; // 기존 데이터 삭제
+                    
+                    // 4층 디자이너 추가
+                    data['4F'].forEach(designer => {
+                        const designerCard = createDesignerCard(designer);
+                        floor4Grid.appendChild(designerCard);
+                    });
+                    
+                    // 3층 디자이너 로드
+                    const floor3Grid = document.querySelector('#floor3Designers .designers-grid');
+                    floor3Grid.innerHTML = ''; // 기존 데이터 삭제
+                    
+                    // 3층 디자이너 추가
+                    data['3F'].forEach(designer => {
+                        const designerCard = createDesignerCard(designer);
+                        floor3Grid.appendChild(designerCard);
+                    });
+                    
+                    // 디자이너 카드 클릭 이벤트 추가
+                    addDesignerCardEvents();
+                })
+                .catch(error => {
+                    console.error('디자이너 데이터를 불러오는 중 오류가 발생했습니다:', error);
+                });
+        }
+        
+        // 디자이너 카드 HTML 생성
+        function createDesignerCard(designer) {
+            const designerCard = document.createElement('div');
+            designerCard.className = 'designer-card';
+            designerCard.dataset.designer = designer.id;
+            
+            // 이니셜 추출 (ex: 'KANGMOO' -> 'KM')
+            const nameParts = designer.name.split(' ');
+            const initials = nameParts.map(part => part.charAt(0)).join('');
+            
+            let avatarHtml = '';
+            if (designer.avatarImage) {
+                avatarHtml = `<img src="${designer.avatarImage}" alt="${designer.name}" class="avatar-image">`;
+            } else {
+                avatarHtml = `<div class="avatar-placeholder">${initials}</div>`;
+            }
+            
+            designerCard.innerHTML = `
+                <div class="designer-avatar">
+                    ${avatarHtml}
+                </div>
+                <div class="designer-info">
+                    <div class="designer-name">${designer.name}</div>
+                    <div class="designer-instagram">${designer.handle}</div>
+                </div>
+            `;
+            
+            return designerCard;
+        }
+        
+        // 디자이너 카드 클릭 이벤트 추가 (기존 이벤트 제거 방지)
+        function addDesignerCardEvents() {
+            // 기존 이벤트 리스너를 제거하기 위해 새 카드로 교체
+            const designerCards = document.querySelectorAll('.designer-card');
+            designerCards.forEach(card => {
+                const newCard = card.cloneNode(true);
+                card.parentNode.replaceChild(newCard, card);
+                
+                // 새로운 클릭 이벤트
+                newCard.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const designerId = this.getAttribute('data-designer');
+                    selectDesigner(designerId);
+                    console.log('디자이너 카드 클릭:', designerId);
+                });
+            });
+        }
+        
+        // 페이지 로드시 디자이너 데이터 불러오기
+        document.addEventListener('DOMContentLoaded', () => {
+            // 디자이너 데이터 로드
+            loadDesigners();
+        });
+        
+        // 중복된 loadDesignerDetails 함수 제거 - 아래에 올바른 버전이 있음
+        
+        // Show Step1 Screen
+        function showStep1Screen() {
+            step1Screen.classList.add('active');
+            // Hide all background screens completely
+            const introScreen = document.querySelector('.intro-screen');
+            const selectionScreen = document.querySelector('.selection-screen');
+            
+            if (introScreen) {
+                introScreen.style.display = 'none';
+            }
+            if (selectionScreen) {
+                selectionScreen.style.display = 'none';
+            }
+            
+            // Show continue button with natural sticky positioning
+            setTimeout(() => {
+                const continueBar = document.querySelector('.continue-bar');
+                if (continueBar) {
+                    continueBar.style.opacity = '1';
+                    continueBar.style.visibility = 'visible';
+                }
+            }, 100);
+        }
+        
+        // Hide Step1 Screen (back to selection)
+        function hideStep1Screen() {
+            step1Screen.classList.remove('active');
+            
+            // Hide continue button immediately
+            const continueBar = document.querySelector('.continue-bar');
+            if (continueBar) {
+                continueBar.style.opacity = '0';
+                continueBar.style.visibility = 'hidden';
+            }
+            
+            // Show selection screen back
+            setTimeout(() => {
+                const introScreen = document.querySelector('.intro-screen');
+                const selectionScreen = document.querySelector('.selection-screen');
+                
+                if (introScreen) {
+                    introScreen.style.display = 'flex';
+                }
+                if (selectionScreen) {
+                    selectionScreen.style.display = 'flex';
+                }
+            }, 100);
+        }
+        
+        // 디자이너 선택 함수
+        function selectDesigner(designerId) {
+            console.log('호출됨: selectDesigner() with ID:', designerId);
+            
+            // 모든 디자이너 카드 선택 해제
+            document.querySelectorAll('.designer-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 선택한 디자이너 카드 선택 표시
+            const selectedCard = document.querySelector(`.designer-card[data-designer="${designerId}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+            
+            // 중요: 이전에 선택한 디자이너가 있는지 확인 및 디버깅
+            const previousDesigner = selectedDesigner;
+            console.log('이전 디자이너:', previousDesigner, '새 디자이너:', designerId);
+            
+            // 선택한 디자이너 ID 저장
+            selectedDesigner = designerId;
+            
+            // 계속하기 버튼 표시
+            if (continueBtn) {
+                continueBtn.style.display = 'block';
+            }
+        }
+
+        // Event Listeners
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('touchstart', handleTouchStart, { passive: true });
+        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+        
+        newUserBtn.addEventListener('click', () => handleUserSelection(true));
+        returningUserBtn.addEventListener('click', () => handleUserSelection(false));
+        
+        // 화면 전환 머신
+        let CURRENT_SCREEN = 'intro'; // intro, selection, step1, step1-5-modal, step2
+        
+        // Step1 Screen Event Listeners - 모든 이벤트 리스너 새로 작성
+        if (backBtn) {
+            // 기존 이벤트 제거
+            const newBackBtn = backBtn.cloneNode(true);
+            backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+            backBtn = newBackBtn;
+            
+            backBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideStep1Screen();
+            });
+        }
+        
+        // Step1.5 Modal Elements - 기본 요소 로드
+        const step15Modal = document.getElementById('step1-5Modal');
+        const modalBottomBar = document.getElementById('modalBottomBar');
+        const modalBackBtn = document.getElementById('modalBackBtn');
+        let modalContinueBtn = document.getElementById('modalContinueBtn');
+        
+        // 모달 하단 바 제어 유틸리티 함수
+        function showModalBottomBar() {
+            if (modalBottomBar) {
+                modalBottomBar.style.opacity = '1';
+                modalBottomBar.style.visibility = 'visible';
+                modalBottomBar.style.pointerEvents = 'auto';
+            }
+        }
+        
+        function hideModalBottomBar() {
+            if (modalBottomBar) {
+                modalBottomBar.style.opacity = '0';
+                modalBottomBar.style.visibility = 'hidden';
+                modalBottomBar.style.pointerEvents = 'none';
+            }
+        }
+        
+        // 초기화: 모달 하단 바 숨기기
+        hideModalBottomBar();
+        
+        // Step1의 Continue 버튼 핸들러 완전히 새로 작성
+        if (continueBtn) {
+            // 1. 먼저 기존 클론해서 모든 이벤트 제거
+            const newContinueBtn = continueBtn.cloneNode(true);
+            if (continueBtn.parentNode) {
+                continueBtn.parentNode.replaceChild(newContinueBtn, continueBtn);
+            }
+            
+            // 2. 변수 재할당 (중요: 이전 이벤트 핸들러 참조 제거)
+            continueBtn = newContinueBtn;
+            
+            // 3. 새로운 클릭 이벤트만 추가
+            continueBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('[디버그] Step1 Continue 버튼 클릭');
+                if (selectedDesigner) {
+                    // 여기서 ONLY Step1.5 모달을 열고, Step2로 넘어가지 않게 함
+                    console.log('[디버그] 선택된 디자이너:', selectedDesigner);
+                    openStep15Modal();
+                } else {
+                    console.log('[디버그] 디자이너 선택되지 않음');
+                }
+            });
+        }
+
+        // Step1.5 모달 오픈 함수 완전히 새로 작성 - 가장 심플하고 확실한 방법으로
+        function openStep15Modal() {
+            console.log('호출: openStep15Modal()');
+            
+            // 0. 선택한 디자이너가 있어야만 작동
+            if (!selectedDesigner) {
+                console.error('오류: 디자이너가 선택되지 않았습니다.');
+                return;
+            }
+            
+            // 1. 디자이너 정보 로드
+            loadDesignerDetails(selectedDesigner);
+            
+            // 2. 모달 리셋 및 초기 표시 상태
+            const modal = document.getElementById('step1-5Modal');
+            if (!modal) {
+                console.error('오류: step1-5Modal 요소를 찾을 수 없습니다.');
+                return;
+            }
+            
+            // 3. 기존 화면 상태 저장
+            const prevDisplay = modal.style.display;
+            const prevVisibility = modal.style.visibility;
+            const prevTransform = modal.style.transform;
+            
+            // 4. 모달 표시 필수 속성 지정
+            modal.style.display = 'block';
+            modal.style.visibility = 'visible';
+            modal.style.transform = 'translateY(100%)';
+            
+            // 5. 주요! 브라우저 렌더링 통합을 위한 초기화 시간 확보
+            document.body.offsetHeight; // 강제 리플로우
+            
+            // 6. 애니메이션 적용
+            setTimeout(function() {
+                modal.classList.add('active');
+                modal.style.transform = 'translateY(0)';
+                document.body.style.overflow = 'hidden';
+                
+                // 7. 모달 하단 바 표시
+                setTimeout(function() {
+                    showModalBottomBar();
+                    
+                    // 8. 추가: 모달 Continue 버튼 이벤트 재설정
+                    setupModalContinueBtn();
+                    console.log('성공: Step1.5 모달이 표시되었습니다.');
+                }, 200);
+            }, 10);
+        }
+        
+        // Close Step1.5 Modal
+        function closeStep15Modal() {
+            if (step15Modal) {
+                step15Modal.classList.remove('active');
+                
+                setTimeout(() => {
+                    step15Modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }, 400); // 트랜지션 완료 후 디스플레이 변경
+            }
+            
+            // 모달 하단 바 숨기기
+            hideModalBottomBar();
+        }
+        
+        // Modal back button event listener
+        if (modalBackBtn) {
+            modalBackBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeStep15Modal();
+            });
+        }
+        
+        // 드래그 핸들 기능
+        const dragHandle = document.querySelector('.drag-handle');
+        let isDragging = false;
+        let startY = 0;
+        let currentY = 0;
+        
+        function handleDragStart(e) {
+            isDragging = true;
+            startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            step15Modal.style.transition = 'none';
+        }
+        
+        function handleDragMove(e) {
+            if (!isDragging) return;
+            
+            e.preventDefault();
+            currentY = (e.type === 'touchmove' ? e.touches[0].clientY : e.clientY) - startY;
+            
+            if (currentY > 0) {
+                step15Modal.style.transform = `translateY(${currentY}px)`;
+            }
+        }
+        
+        function handleDragEnd(e) {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            step15Modal.style.transition = 'transform 0.4s ease-out';
+            
+            if (currentY > window.innerHeight * 0.2) {
+                closeStep15Modal();
+            } else {
+                step15Modal.style.transform = 'translateY(0)';
+            }
+            
+            currentY = 0;
+        }
+        
+        // 드래그 이벤트 리스너
+        if (dragHandle) {
+            dragHandle.addEventListener('mousedown', handleDragStart);
+            dragHandle.addEventListener('touchstart', handleDragStart, { passive: false });
+            
+            document.addEventListener('mousemove', handleDragMove);
+            document.addEventListener('touchmove', handleDragMove, { passive: false });
+            
+            document.addEventListener('mouseup', handleDragEnd);
+            document.addEventListener('touchend', handleDragEnd);
+        }
+        
+        // Step1.5 모달의 Continue 버튼 - Step2로 전환
+        function setupModalContinueBtn() {
+            console.log('[디버그] 모달 Continue 버튼 설정 중');
+            // 모달 Continue 버튼 요소 가져오기 (중요: 이 시점에 DOM에 있어야 함)
+            const btn = document.getElementById('modalContinueBtn');
+            
+            if (btn) {
+                console.log('[디버그] 모달 Continue 버튼 찾음');
+                
+                // 기존 이벤트 제거를 위한 클론
+                const newBtn = btn.cloneNode(true);
+                if (btn.parentNode) {
+                    btn.parentNode.replaceChild(newBtn, btn);
+                }
+                
+                // 전역 변수 업데이트
+                modalContinueBtn = newBtn;
+                
+                // 새로운 이벤트 설정
+                newBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('[디버그] Step1.5 모달 Continue 버튼 클릭됨');
+                    
+                    // Step2로 전환
+                    transitionToStep2();
+                });
+                
+                console.log('[디버그] 모달 Continue 버튼에 이벤트 설정 완료');
+            } else {
+                console.error('[디버그] 모달 Continue 버튼을 찾을 수 없음');
+            }
+        }
+        
+        // 페이지 로드 완료 시 모달 버튼 설정
+        window.addEventListener('DOMContentLoaded', function() {
+            setupModalContinueBtn();
+        });
+        
+        // Step2 Elements
+        const step2Screen = document.getElementById('step2Screen');
+        const step2BackBtn = document.getElementById('step2BackBtn');
+        const step2ContinueBtn = document.getElementById('step2ContinueBtn');
+        
+        // Step2 Selection State
+        let selectedDate = '12'; // Default selected
+        let selectedTime = null;
+        
+        // Update Step2 with selected designer info
+        function updateStep2DesignerInfo() {
+            const designerNameText = document.querySelector('.designer-name-text');
+            const designerHandle = document.querySelector('.designer-handle');
+            
+            if (selectedDesigner && designerNameText && designerHandle) {
+                designerNameText.textContent = selectedDesigner.toUpperCase();
+                designerHandle.textContent = `@Juno_${selectedDesigner}`;
+            }
+        }
+        
+        // Transition to Step2 from Step1.5 Modal
+        function transitionToStep2() {
+            console.log('호출: transitionToStep2() - 디버깅');
+            
+            // 중요: Step1.5 모달을 닫지 않음!!!
+            // 이것이 이전 코드에서 문제였을 수 있음
+            // 여기에서 모달을 닫는 어떤 코드도 제거해야 함
+            
+            // Update designer info in Step2
+            updateStep2DesignerInfo();
+            
+            // Step2 화면만 활성화
+            if (step2Screen) {
+                // Step2 화면 보이기
+                step2Screen.classList.add('active');
+                console.log('Step2 화면 활성화');
+            } else {
+                console.error('step2Screen element not found');
+                return; // 엘리먼트가 없으면 여기서 중단
+            }
+                
+            // 모달 하단 바만 숨기기
+            hideModalBottomBar();
+            
+            // 추가 디버깅
+            console.log('완료: Step2로 전환 (모달은 닫지 않음)');
+        }
+        
+        // Go back to Step1.5 from Step2
+        function backToStep1() {
+            step2Screen.classList.remove('active');
+            
+            // 모달 하단 버튼 다시 표시
+            showModalBottomBar();
+        }
+        
+        // Step2 Event Listeners
+        step2BackBtn.addEventListener('click', () => {
+            backToStep1();
+        });
+        
+        // Date selection
+        const dateOptions = document.querySelectorAll('.date-option');
+        dateOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Remove previous selection
+                dateOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                // Add selection to clicked option
+                option.classList.add('selected');
+                selectedDate = option.dataset.date;
+                
+                console.log('Selected date:', selectedDate);
+                checkStep2Completion();
+            });
+        });
+        
+        // Time selection
+        const timeSlots = document.querySelectorAll('.time-slot');
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                if (slot.classList.contains('unavailable')) return;
+                
+                // Remove previous selection
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                
+                // Add selection to clicked slot
+                slot.classList.add('selected');
+                selectedTime = slot.dataset.time;
+                
+                console.log('Selected time:', selectedTime);
+                checkStep2Completion();
+            });
+        });
+        
+        // Check if both date and time are selected
+        function checkStep2Completion() {
+            if (selectedDate && selectedTime) {
+                step2ContinueBtn.disabled = false;
+            } else {
+                step2ContinueBtn.disabled = true;
+            }
+        }
+        
+        // Step2 Continue button
+        step2ContinueBtn.addEventListener('click', () => {
+            if (selectedDate && selectedTime) {
+                console.log('Booking details:', {
+                    designer: selectedDesigner,
+                    date: selectedDate,
+                    time: selectedTime
+                });
+                // Here you would proceed to next step (Step3)
+                alert(`Booking confirmed for ${selectedTime} on date ${selectedDate}`);
+            }
+        });
+        
+        const termsLink = document.getElementById('termsLink');
+        const privacyLink = document.getElementById('privacyLink');
+        
+        termsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('Terms of Use clicked');
+        });
+        
+        privacyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('Privacy Policy clicked');
+        });
+
+        // Prevent bounce scrolling on iOS
+        document.addEventListener('touchmove', (e) => {
+            if (e.target.closest('.selection-screen')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Smooth entrance animation
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+{
+  "3F": [
+    {
+      "id": "dongwan",
+      "name": "DONGWAN",
+      "handle": "@dongwan_hair",
+      "avatarImage": "/assets/designers/3F/DONGWAN MasterStylist.jpeg",
+      "profileImage": "/assets/designers/3F/DONGWAN MasterStylist.jpeg",
+      "instagram": {
+        "username": "dongwan_hair",
+        "postUrl": "https://www.instagram.com/p/C123456789/"
+      },
+      "stats": {
+        "followers": "12.5K",
+        "following": "235"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/3F/DONGWAN MasterStylist.jpeg",
+        "/assets/designers/3F/DONGWAN MasterStylist.jpeg",
+        "/assets/designers/3F/DONGWAN MasterStylist.jpeg",
+        "/assets/designers/3F/DONGWAN MasterStylist.jpeg",
+        "/assets/designers/3F/DONGWAN MasterStylist.jpeg",
+        "/assets/designers/3F/DONGWAN MasterStylist.jpeg"
+      ]
+    },
+    {
+      "id": "eunhyuk",
+      "name": "EUN HYUK",
+      "handle": "@eunhyuk_style",
+      "avatarImage": "/assets/designers/3F/EUN HYUK MasterStylist.jpeg",
+      "profileImage": "/assets/designers/3F/EUN HYUK MasterStylist.jpeg",
+      "instagram": {
+        "username": "eunhyuk_style",
+        "postUrl": "https://www.instagram.com/p/C987654321/"
+      },
+      "stats": {
+        "followers": "8.2K",
+        "following": "122"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/3F/EUN HYUK MasterStylist.jpeg",
+        "/assets/designers/3F/EUN HYUK MasterStylist.jpeg",
+        "/assets/designers/3F/EUN HYUK MasterStylist.jpeg",
+        "/assets/designers/3F/EUN HYUK MasterStylist.jpeg",
+        "/assets/designers/3F/EUN HYUK MasterStylist.jpeg",
+        "/assets/designers/3F/EUN HYUK MasterStylist.jpeg"
+      ]
+    },
+    {
+      "id": "jin",
+      "name": "JIN",
+      "handle": "@jin_designer",
+      "avatarImage": "/assets/designers/3F/JIN MasterStylist.jpeg",
+      "profileImage": "/assets/designers/3F/JIN MasterStylist.jpeg",
+      "stats": {
+        "followers": "15.3K",
+        "following": "189"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/3F/JIN MasterStylist.jpeg",
+        "/assets/designers/3F/JIN MasterStylist.jpeg",
+        "/assets/designers/3F/JIN MasterStylist.jpeg",
+        "/assets/designers/3F/JIN MasterStylist.jpeg",
+        "/assets/designers/3F/JIN MasterStylist.jpeg",
+        "/assets/designers/3F/JIN MasterStylist.jpeg"
+      ]
+    },
+    {
+      "id": "ranjoo",
+      "name": "RANJOO",
+      "handle": "@ranjoo_master",
+      "avatarImage": "/assets/designers/3F/RanJoo Master.jpeg",
+      "profileImage": "/assets/designers/3F/RanJoo Master.jpeg",
+      "stats": {
+        "followers": "9.8K",
+        "following": "156"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/3F/RanJoo Master.jpeg",
+        "/assets/designers/3F/RanJoo Master.jpeg",
+        "/assets/designers/3F/RanJoo Master.jpeg",
+        "/assets/designers/3F/RanJoo Master.jpeg",
+        "/assets/designers/3F/RanJoo Master.jpeg",
+        "/assets/designers/3F/RanJoo Master.jpeg"
+      ]
+    },
+    {
+      "id": "shinho",
+      "name": "SHIN HO",
+      "handle": "@shinho_designer",
+      "avatarImage": "/assets/designers/3F/SHIN HO Designer..jpeg",
+      "profileImage": "/assets/designers/3F/SHIN HO Designer..jpeg",
+      "stats": {
+        "followers": "7.1K",
+        "following": "98"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/3F/SHIN HO Designer..jpeg",
+        "/assets/designers/3F/SHIN HO Designer..jpeg",
+        "/assets/designers/3F/SHIN HO Designer..jpeg",
+        "/assets/designers/3F/SHIN HO Designer..jpeg",
+        "/assets/designers/3F/SHIN HO Designer..jpeg",
+        "/assets/designers/3F/SHIN HO Designer..jpeg"
+      ]
+    },
+    {
+      "id": "thahee",
+      "name": "THAHEE",
+      "handle": "@thahee_style",
+      "avatarImage": "/assets/designers/3F/THAHEE MasterStylist.jpeg",
+      "profileImage": "/assets/designers/3F/THAHEE MasterStylist.jpeg",
+      "stats": {
+        "followers": "11.2K",
+        "following": "203"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/3F/THAHEE MasterStylist.jpeg",
+        "/assets/designers/3F/THAHEE MasterStylist.jpeg",
+        "/assets/designers/3F/THAHEE MasterStylist.jpeg",
+        "/assets/designers/3F/THAHEE MasterStylist.jpeg",
+        "/assets/designers/3F/THAHEE MasterStylist.jpeg",
+        "/assets/designers/3F/THAHEE MasterStylist.jpeg"
+      ]
+    },
+    {
+      "id": "woogi",
+      "name": "WOO-GI",
+      "handle": "@woogi_designer",
+      "avatarImage": "/assets/designers/3F/WOO-GI Designer..jpeg",
+      "profileImage": "/assets/designers/3F/WOO-GI Designer..jpeg",
+      "stats": {
+        "followers": "6.8K",
+        "following": "87"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/3F/WOO-GI Designer..jpeg",
+        "/assets/designers/3F/WOO-GI Designer..jpeg",
+        "/assets/designers/3F/WOO-GI Designer..jpeg",
+        "/assets/designers/3F/WOO-GI Designer..jpeg",
+        "/assets/designers/3F/WOO-GI Designer..jpeg",
+        "/assets/designers/3F/WOO-GI Designer..jpeg"
+      ]
+    },
+    {
+      "id": "yena",
+      "name": "YENA",
+      "handle": "@yena_designer",
+      "avatarImage": "/assets/designers/3F/YENA Designer..jpeg",
+      "profileImage": "/assets/designers/3F/YENA Designer..jpeg",
+      "stats": {
+        "followers": "9.5K",
+        "following": "134"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/3F/YENA Designer..jpeg",
+        "/assets/designers/3F/YENA Designer..jpeg",
+        "/assets/designers/3F/YENA Designer..jpeg",
+        "/assets/designers/3F/YENA Designer..jpeg",
+        "/assets/designers/3F/YENA Designer..jpeg",
+        "/assets/designers/3F/YENA Designer..jpeg"
+      ]
+    }
+  ],
+  "4F": [
+    {
+      "id": "green",
+      "name": "GREEN",
+      "handle": "@green_designer",
+      "avatarImage": "/assets/designers/4F/GREEN Designer..jpeg",
+      "profileImage": "/assets/designers/4F/GREEN Designer..jpeg",
+      "stats": {
+        "followers": "18.7K",
+        "following": "312"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/4F/GREEN Designer..jpeg",
+        "/assets/designers/4F/GREEN Designer..jpeg",
+        "/assets/designers/4F/GREEN Designer..jpeg",
+        "/assets/designers/4F/GREEN Designer..jpeg",
+        "/assets/designers/4F/GREEN Designer..jpeg",
+        "/assets/designers/4F/GREEN Designer..jpeg"
+      ]
+    },
+    {
+      "id": "harry",
+      "name": "HARRY",
+      "handle": "@harry_master",
+      "avatarImage": "/assets/designers/4F/HARRY MasterStylist.jpeg",
+      "profileImage": "/assets/designers/4F/HARRY MasterStylist.jpeg",
+      "stats": {
+        "followers": "25.3K",
+        "following": "456"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/4F/HARRY MasterStylist.jpeg",
+        "/assets/designers/4F/HARRY MasterStylist.jpeg",
+        "/assets/designers/4F/HARRY MasterStylist.jpeg",
+        "/assets/designers/4F/HARRY MasterStylist.jpeg",
+        "/assets/designers/4F/HARRY MasterStylist.jpeg",
+        "/assets/designers/4F/HARRY MasterStylist.jpeg"
+      ]
+    },
+    {
+      "id": "ian",
+      "name": "IAN",
+      "handle": "@ian_designer",
+      "avatarImage": "/assets/designers/4F/IAN Designer.jpeg",
+      "profileImage": "/assets/designers/4F/IAN Designer.jpeg",
+      "stats": {
+        "followers": "14.2K",
+        "following": "289"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/4F/IAN Designer.jpeg",
+        "/assets/designers/4F/IAN Designer.jpeg",
+        "/assets/designers/4F/IAN Designer.jpeg",
+        "/assets/designers/4F/IAN Designer.jpeg",
+        "/assets/designers/4F/IAN Designer.jpeg",
+        "/assets/designers/4F/IAN Designer.jpeg"
+      ]
+    },
+    {
+      "id": "kang_mooo_",
+      "name": "KANGMOO",
+      "handle": "@kang_mooo_",
+      "avatarImage": "/assets/designers/4F/KANGMOO MasterStylist.jpeg",
+      "profileImage": "/assets/designers/4F/KANGMOO MasterStylist.jpeg",
+      "instagram": {
+        "username": "kang_mooo_",
+        "postUrl": "https://www.instagram.com/kang_mooo_/"
+      },
+      "stats": {
+        "followers": "32.1K",
+        "following": "512"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/4F/KANGMOO MasterStylist.jpeg",
+        "/assets/designers/4F/KANGMOO MasterStylist.jpeg",
+        "/assets/designers/4F/KANGMOO MasterStylist.jpeg",
+        "/assets/designers/4F/KANGMOO MasterStylist.jpeg",
+        "/assets/designers/4F/KANGMOO MasterStylist.jpeg",
+        "/assets/designers/4F/KANGMOO MasterStylist.jpeg"
+      ]
+    },
+    {
+      "id": "nayeseul",
+      "name": "NAYESEUL",
+      "handle": "@nayeseul_director",
+      "avatarImage": "/assets/designers/4F/Nayeseul Senior Creative Director.jpeg",
+      "profileImage": "/assets/designers/4F/Nayeseul Senior Creative Director.jpeg",
+      "stats": {
+        "followers": "41.8K",
+        "following": "678"
+      },
+      "verified": true,
+      "portfolio": [
+        "/assets/designers/4F/Nayeseul Senior Creative Director.jpeg",
+        "/assets/designers/4F/Nayeseul Senior Creative Director.jpeg",
+        "/assets/designers/4F/Nayeseul Senior Creative Director.jpeg",
+        "/assets/designers/4F/Nayeseul Senior Creative Director.jpeg",
+        "/assets/designers/4F/Nayeseul Senior Creative Director.jpeg",
+        "/assets/designers/4F/Nayeseul Senior Creative Director.jpeg"
+      ]
+    }
+  ]
+}
