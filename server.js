@@ -151,6 +151,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Super Admin page
+app.get('/super-admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'super-admin.html'));
+});
+
 // Designer login page
 app.get('/designer-login', (req, res) => {
     res.sendFile(path.join(__dirname, 'designer-login.html'));
@@ -523,10 +528,55 @@ setInterval(() => {
     }
 }, 60 * 60 * 1000); // Every hour
 
+// Super Admin API endpoints
+// Get system status
+app.get('/api/status', (req, res) => {
+    res.json({ 
+        status: 'online',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memory: process.memoryUsage()
+    });
+});
+
+// Get all designers
+app.get('/api/designers', (req, res) => {
+    const designers = loadDesignerAccounts();
+    res.json(designers);
+});
+
+// Get all reservations (mock endpoint - implement based on your reservation system)
+app.get('/api/reservations', (req, res) => {
+    // This is a mock response - implement based on your actual reservation system
+    res.json([
+        {
+            id: 1,
+            customerName: '김고객',
+            date: '2024-01-15',
+            time: '14:00',
+            designerName: '김디자이너',
+            status: '확정'
+        }
+    ]);
+});
+
+// Get system statistics
+app.get('/api/stats', (req, res) => {
+    const designers = loadDesignerAccounts();
+    const posts = loadDesignerPosts();
+    
+    res.json({
+        totalDesigners: designers.length,
+        totalPosts: posts.posts ? posts.posts.length : 0,
+        totalReservations: 0, // Implement based on your reservation system
+        serverUptime: process.uptime()
+    });
+});
+
 // 404 handler
 app.use((req, res) => {
     res.status(404).json({ 
-        error: 'Page not found',
+        error: 'Not Found',
         message: 'The requested resource was not found on this server.'
     });
 });

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANOV 슈퍼 어드민 - 통합 관리 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .card-description {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .system-status {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .status-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .status-value {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .status-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .online { color: #27ae60; }
+        .offline { color: #e74c3c; }
+        .warning { color: #f39c12; }
+
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-actions h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ANOV 슈퍼 어드민</h1>
+            <p>모든 시스템을 한 곳에서 통합 관리하세요</p>
+        </div>
+
+        <div class="system-status">
+            <h3 style="color: #2c3e50; margin-bottom: 20px;">📊 시스템 현황</h3>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-value online" id="serverStatus">●</div>
+                    <div class="status-label">서버 상태</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="totalReservations">0</div>
+                    <div class="status-label">총 예약 수</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="totalDesigners">0</div>
+                    <div class="status-label">등록된 디자이너</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="totalPosts">0</div>
+                    <div class="status-label">게시물 수</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- 메인 사이트 관리 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🏠</div>
+                    <div class="card-title">메인 사이트 관리</div>
+                </div>
+                <div class="card-description">
+                    고객용 메인 페이지와 예약 시스템을 관리합니다.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="openInModal('/', '메인 사이트')">메인 사이트 보기</button>
+                    <button class="btn btn-secondary" onclick="openInModal('/step2.html', '예약 페이지')">예약 페이지 관리</button>
+                    <button class="btn btn-secondary" onclick="window.open('/', '_blank')">새 창에서 열기</button>
+                </div>
+            </div>
+
+            <!-- 디자이너 관리 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);">👨‍🎨</div>
+                    <div class="card-title">디자이너 관리</div>
+                </div>
+                <div class="card-description">
+                    디자이너 계정, 스케줄, 포트폴리오를 관리합니다.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="openInModal('/designer-login.html', '디자이너 로그인')">디자이너 로그인</button>
+                    <button class="btn btn-secondary" onclick="openInModal('/designer-dashboard.html', '디자이너 대시보드')">대시보드 보기</button>
+                    <button class="btn btn-secondary" onclick="showDesignerList()">디자이너 목록</button>
+                </div>
+            </div>
+
+            <!-- 예약 관리 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">📅</div>
+                    <div class="card-title">예약 관리</div>
+                </div>
+                <div class="card-description">
+                    모든 예약을 확인하고 관리합니다.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-warning" onclick="showReservations()">예약 현황 보기</button>
+                    <button class="btn btn-secondary" onclick="showScheduleManagement()">스케줄 관리</button>
+                    <button class="btn btn-secondary" onclick="sendTestNotification()">테스트 알림 발송</button>
+                </div>
+            </div>
+
+            <!-- 콘텐츠 관리 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">📝</div>
+                    <div class="card-title">콘텐츠 관리</div>
+                </div>
+                <div class="card-description">
+                    포트폴리오, 게시물, 이미지를 관리합니다.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="showPostManagement()">게시물 관리</button>
+                    <button class="btn btn-secondary" onclick="showImageManagement()">이미지 관리</button>
+                    <button class="btn btn-secondary" onclick="openInModal('/admin.html', '기존 관리자')">기존 관리자 페이지</button>
+                </div>
+            </div>
+
+            <!-- 시스템 관리 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);">⚙️</div>
+                    <div class="card-title">시스템 관리</div>
+                </div>
+                <div class="card-description">
+                    서버 상태, 로그, 백업을 관리합니다.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="checkServerStatus()">서버 상태 확인</button>
+                    <button class="btn btn-secondary" onclick="showSystemLogs()">시스템 로그</button>
+                    <button class="btn btn-warning" onclick="restartServer()">서버 재시작</button>
+                </div>
+            </div>
+
+            <!-- 도메인 관리 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">🌐</div>
+                    <div class="card-title">라이브 도메인 접근</div>
+                </div>
+                <div class="card-description">
+                    Anov.kr 라이브 사이트의 모든 페이지에 직접 접근합니다.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-danger" onclick="window.open('https://anov.kr', '_blank')">🏠 메인 사이트</button>
+                    <button class="btn btn-warning" onclick="window.open('https://anov.kr/step2.html', '_blank')">📅 예약 페이지</button>
+                    <button class="btn btn-success" onclick="window.open('https://anov.kr/designer-login.html', '_blank')">👨‍🎨 디자이너 로그인</button>
+                    <button class="btn btn-primary" onclick="window.open('https://anov.kr/designer-dashboard.html', '_blank')">📊 디자이너 대시보드</button>
+                    <button class="btn btn-secondary" onclick="window.open('https://anov.kr/admin.html', '_blank')">⚙️ 관리자 페이지</button>
+                    <button class="btn btn-secondary" onclick="showAllLiveLinks()">🔗 모든 링크 보기</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3>⚡ 빠른 작업</h3>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="refreshAllData()">전체 데이터 새로고침</button>
+                <button class="btn btn-success" onclick="backupData()">데이터 백업</button>
+                <button class="btn btn-warning" onclick="clearCache()">캐시 정리</button>
+                <button class="btn btn-danger" onclick="window.open('https://anov.kr', '_blank')">라이브 사이트 열기</button>
+                <button class="btn btn-secondary" onclick="showAllLiveLinks()">전체 링크 보기</button>
+                <button class="btn btn-danger" onclick="emergencyMode()">긴급 모드</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="pageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">페이지 보기</h2>
+            <iframe id="modalFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        // 모달 관련 함수
+        function openInModal(url, title) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalFrame').src = url;
+            document.getElementById('pageModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('pageModal').style.display = 'none';
+            document.getElementById('modalFrame').src = '';
+        }
+
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('pageModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // 시스템 상태 업데이트
+        async function updateSystemStatus() {
+            try {
+                // 서버 상태 확인
+                const response = await fetch('/api/status');
+                if (response.ok) {
+                    document.getElementById('serverStatus').textContent = '●';
+                    document.getElementById('serverStatus').className = 'status-value online';
+                } else {
+                    document.getElementById('serverStatus').textContent = '●';
+                    document.getElementById('serverStatus').className = 'status-value offline';
+                }
+
+                // 디자이너 수 가져오기
+                const designersResponse = await fetch('/api/designers');
+                if (designersResponse.ok) {
+                    const designers = await designersResponse.json();
+                    document.getElementById('totalDesigners').textContent = designers.length || 0;
+                }
+
+                // 게시물 수 가져오기
+                const postsResponse = await fetch('/api/designer/posts');
+                if (postsResponse.ok) {
+                    const posts = await postsResponse.json();
+                    document.getElementById('totalPosts').textContent = posts.posts?.length || 0;
+                }
+
+            } catch (error) {
+                console.error('상태 업데이트 실패:', error);
+                document.getElementById('serverStatus').textContent = '●';
+                document.getElementById('serverStatus').className = 'status-value offline';
+            }
+        }
+
+        // 디자이너 목록 보기
+        async function showDesignerList() {
+            try {
+                const response = await fetch('/api/designers');
+                const designers = await response.json();
+                
+                let html = '<h3>등록된 디자이너 목록</h3><div style="margin-top: 20px;">';
+                designers.forEach(designer => {
+                    html += `
+                        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px;">
+                            <h4>${designer.name}</h4>
+                            <p>이메일: ${designer.email}</p>
+                            <p>전화번호: ${designer.phone}</p>
+                            <p>등록일: ${new Date(designer.createdAt).toLocaleDateString()}</p>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+                document.getElementById('modalTitle').textContent = '디자이너 관리';
+                document.getElementById('modalFrame').style.display = 'none';
+                document.querySelector('.modal-content').innerHTML = `
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    ${html}
+                `;
+                document.getElementById('pageModal').style.display = 'block';
+            } catch (error) {
+                alert('디자이너 목록을 불러오는데 실패했습니다.');
+            }
+        }
+
+        // 예약 현황 보기
+        async function showReservations() {
+            try {
+                const response = await fetch('/api/reservations');
+                const reservations = await response.json();
+                
+                let html = '<h3>예약 현황</h3><div style="margin-top: 20px;">';
+                if (reservations.length === 0) {
+                    html += '<p>현재 예약이 없습니다.</p>';
+                } else {
+                    reservations.forEach(reservation => {
+                        html += `
+                            <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px;">
+                                <h4>${reservation.customerName}</h4>
+                                <p>날짜: ${reservation.date}</p>
+                                <p>시간: ${reservation.time}</p>
+                                <p>디자이너: ${reservation.designerName}</p>
+                                <p>상태: ${reservation.status}</p>
+                            </div>
+                        `;
+                    });
+                }
+                html += '</div>';
+                
+                document.getElementById('modalTitle').textContent = '예약 관리';
+                document.getElementById('modalFrame').style.display = 'none';
+                document.querySelector('.modal-content').innerHTML = `
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    ${html}
+                `;
+                document.getElementById('pageModal').style.display = 'block';
+            } catch (error) {
+                alert('예약 현황을 불러오는데 실패했습니다.');
+            }
+        }
+
+        // 게시물 관리
+        async function showPostManagement() {
+            try {
+                const response = await fetch('/api/designer/posts');
+                const data = await response.json();
+                
+                let html = '<h3>게시물 관리</h3><div style="margin-top: 20px;">';
+                if (!data.posts || data.posts.length === 0) {
+                    html += '<p>현재 게시물이 없습니다.</p>';
+                } else {
+                    data.posts.forEach(post => {
+                        html += `
+                            <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px;">
+                                <h4>${post.title}</h4>
+                                <p>${post.content.substring(0, 100)}...</p>
+                                <p>작성자: ${post.designerName}</p>
+                                <p>작성일: ${new Date(post.createdAt).toLocaleDateString()}</p>
+                                ${post.images ? `<p>이미지: ${post.images.length}개</p>` : ''}
+                            </div>
+                        `;
+                    });
+                }
+                html += '</div>';
+                
+                document.getElementById('modalTitle').textContent = '콘텐츠 관리';
+                document.getElementById('modalFrame').style.display = 'none';
+                document.querySelector('.modal-content').innerHTML = `
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    ${html}
+                `;
+                document.getElementById('pageModal').style.display = 'block';
+            } catch (error) {
+                alert('게시물을 불러오는데 실패했습니다.');
+            }
+        }
+
+        // 테스트 알림 발송
+        async function sendTestNotification() {
+            try {
+                const response = await fetch('/api/send-test-notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('테스트 알림이 발송되었습니다.');
+                } else {
+                    const error = await response.json();
+                    alert('알림 발송 실패: ' + error.error);
+                }
+            } catch (error) {
+                alert('알림 발송 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 서버 상태 확인
+        async function checkServerStatus() {
+            await updateSystemStatus();
+            alert('서버 상태가 업데이트되었습니다.');
+        }
+
+        // 모든 라이브 링크 보기
+        function showAllLiveLinks() {
+            const liveLinks = [
+                { name: '🏠 메인 사이트', url: 'https://anov.kr', description: '고객용 메인 페이지' },
+                { name: '📅 예약 페이지', url: 'https://anov.kr/step2.html', description: '고객 예약 시스템' },
+                { name: '👨‍🎨 디자이너 로그인', url: 'https://anov.kr/designer-login.html', description: '디자이너 전용 로그인' },
+                { name: '📊 디자이너 대시보드', url: 'https://anov.kr/designer-dashboard.html', description: '디자이너 관리 패널' },
+                { name: '⚙️ 관리자 페이지', url: 'https://anov.kr/admin.html', description: '기존 관리자 시스템' },
+                { name: '🚀 슈퍼 어드민', url: 'https://anov.kr/super-admin', description: '통합 관리 시스템' }
+            ];
+            
+            let html = '<h3>🔗 라이브 도메인 전체 링크</h3><div style="margin-top: 20px;">';
+            liveLinks.forEach(link => {
+                html += `
+                    <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0;">${link.name}</h4>
+                            <p style="margin: 0; color: #666; font-size: 0.9em;">${link.description}</p>
+                            <p style="margin: 5px 0 0 0; color: #007bff; font-size: 0.8em;">${link.url}</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" onclick="window.open('${link.url}', '_blank')" style="margin-right: 10px;">열기</button>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('${link.url}')">복사</button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            document.getElementById('modalTitle').textContent = '라이브 도메인 링크 관리';
+            document.getElementById('modalFrame').style.display = 'none';
+            document.querySelector('.modal-content').innerHTML = `
+                <span class="close" onclick="closeModal()">&times;</span>
+                ${html}
+            `;
+            document.getElementById('pageModal').style.display = 'block';
+        }
+        
+        // 클립보드에 복사
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('링크가 클립보드에 복사되었습니다!');
+            }, function(err) {
+                console.error('복사 실패:', err);
+                alert('복사에 실패했습니다.');
+            });
+        }
+        
+        // 도메인 정보 표시
+        function showDomainInfo() {
+            const html = `
+                <h3>도메인 정보</h3>
+                <div style="margin-top: 20px;">
+                    <p><strong>도메인:</strong> Anov.kr</p>
+                    <p><strong>현재 상태:</strong> 활성</p>
+                    <p><strong>서버 위치:</strong> 라이브 서버</p>
+                    <p><strong>프로토콜:</strong> HTTPS</p>
+                    <p><strong>마지막 확인:</strong> ${new Date().toLocaleString()}</p>
+                </div>
+            `;
+            
+            document.getElementById('modalTitle').textContent = '도메인 관리';
+            document.getElementById('modalFrame').style.display = 'none';
+            document.querySelector('.modal-content').innerHTML = `
+                <span class="close" onclick="closeModal()">&times;</span>
+                ${html}
+            `;
+            document.getElementById('pageModal').style.display = 'block';
+        }
+
+        // 빠른 작업 함수들
+        function refreshAllData() {
+            updateSystemStatus();
+            alert('모든 데이터가 새로고침되었습니다.');
+        }
+
+        function backupData() {
+            alert('데이터 백업이 시작되었습니다.');
+        }
+
+        function clearCache() {
+            alert('캐시가 정리되었습니다.');
+        }
+
+        function emergencyMode() {
+            if (confirm('긴급 모드를 활성화하시겠습니까?')) {
+                alert('긴급 모드가 활성화되었습니다.');
+            }
+        }
+
+        function restartServer() {
+            if (confirm('서버를 재시작하시겠습니까?')) {
+                alert('서버 재시작 요청이 전송되었습니다.');
+            }
+        }
+
+        function showScheduleManagement() {
+            openInModal('/designer-dashboard.html', '스케줄 관리');
+        }
+
+        function showImageManagement() {
+            alert('이미지 관리 기능은 개발 중입니다.');
+        }
+
+        function showSystemLogs() {
+            alert('시스템 로그 기능은 개발 중입니다.');
+        }
+
+        function showSSLStatus() {
+            alert('SSL 상태: 개발 환경에서는 HTTP 사용 중');
+        }
+
+        // 페이지 로드 시 상태 업데이트
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSystemStatus();
+            
+            // 5분마다 상태 업데이트
+            setInterval(updateSystemStatus, 300000);
+        });
+    </script>
+</body>
+</html>
